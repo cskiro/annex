@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Claude Code local settings and skills
+.claude/settings.local.json
+.claude/skills/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
