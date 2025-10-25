@@ -1,6 +1,6 @@
 # Annex - Claude Code Skills
 
-> A curated collection of production-ready skills for [Claude Code](https://claude.com/claude-code)
+> A curated collection of skills for [Claude Code](https://claude.com/claude-code)
 
 This repository contains reusable, battle-tested skills that extend Claude Code's capabilities for common software engineering tasks.
 
@@ -94,7 +94,7 @@ Have a useful skill to share? Contributions welcome!
 - Clear documentation with examples
 - Follows modern best practices (2024-25)
 - Includes reference materials for context
-- Production-ready code quality
+- Well-tested and documented code
 
 ## Best Practices
 
@@ -132,5 +132,6 @@ Apache 2.0
 
 **Maintained by**: Connor
 **Last Updated**: 2025-10-25
+**Status**: Proof of Concept
 
-*Built for engineers who value production-ready tooling*
+*Experimental skills for extending Claude Code capabilities*
