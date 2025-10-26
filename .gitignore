@@ -12,9 +12,12 @@ __pycache__/
 *.so
 .Python
 
-# Audit outputs (from codebase-auditor skill)
+# Audit outputs (from codebase-auditor and bulletproof-react-auditor skills)
 *.report.md
 *.report.json
 *.report.html
 audit-results/
 audit-output/
+bulletproof-audit*.md
+bulletproof-audit*.json
+migration-plan*.md
