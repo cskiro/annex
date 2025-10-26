@@ -21,3 +21,4 @@ audit-output/
 bulletproof-audit*.md
 bulletproof-audit*.json
 migration-plan*.md
+claude-md-auditor/scripts/__pycache__/
