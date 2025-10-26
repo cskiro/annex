@@ -5,6 +5,9 @@
 .claude/settings.local.json
 .claude/skills/
 
+# Internal handoff documentation (private session summaries)
+docs/
+
 # Python
 __pycache__/
 *.py[cod]
