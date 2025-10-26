@@ -1,0 +1,16 @@
+# Core dependencies for cc-insights skill
+
+# Sentence transformers for semantic embeddings
+sentence-transformers>=2.2.0
+
+# ChromaDB for vector database
+chromadb>=0.4.0
+
+# Template engine for reports
+jinja2>=3.1.0
+
+# CLI framework
+click>=8.1.0
+
+# Date utilities
+python-dateutil>=2.8.0
