@@ -20,12 +20,12 @@ This skill transforms your Claude Code conversations into actionable insights wi
 ✅ **Globally Installed and Operational** (October 26, 2025)
 
 - **Location**: `~/.claude/skills/cc-insights/`
-- **Database**: 19 conversations indexed (5 annex + 14 heisenberg)
+- **Database**: 19 conversations indexed (5 claudex + 14 heisenberg)
 - **Messages**: 5,003 total (1,667 user, 2,341 assistant)
 - **RAG Index**: 19 conversations embedded with all-MiniLM-L6-v2 (384-dim)
 - **Status**: Fully functional and ready for use across all projects
 
-**Cross-Project Support**: This skill uses a global database, enabling insights across multiple projects (annex, heisenberg, etc.).
+**Cross-Project Support**: This skill uses a global database, enabling insights across multiple projects (claudex, heisenberg, etc.).
 
 ## Quick Start
 
@@ -48,7 +48,7 @@ Process your existing conversations:
 
 ```bash
 # Process all conversations for current project
-python scripts/conversation-processor.py --project-name annex --verbose --stats
+python scripts/conversation-processor.py --project-name claudex --verbose --stats
 
 # Build semantic search index
 python scripts/rag_indexer.py --verbose --stats
@@ -146,7 +146,7 @@ Parse JSONL files and extract conversation metadata.
 python scripts/conversation-processor.py [OPTIONS]
 
 Options:
-  --project-name TEXT    Project to process (default: annex)
+  --project-name TEXT    Project to process (default: claudex)
   --db-path PATH         Database path
   --reindex              Reprocess all (ignore cache)
   --verbose              Show detailed logs
@@ -327,7 +327,7 @@ ls rag_indexer.py
 **Solution:**
 ```bash
 # Run processor first
-python scripts/conversation-processor.py --project-name annex --verbose
+python scripts/conversation-processor.py --project-name claudex --verbose
 ```
 
 ### "No conversations found"
@@ -397,7 +397,7 @@ The system automatically handles incremental updates:
 **Recommended workflow:**
 ```bash
 # Daily/weekly: Run both for new conversations
-python scripts/conversation-processor.py --project-name annex
+python scripts/conversation-processor.py --project-name claudex
 python scripts/rag_indexer.py
 
 # Takes <5s if only a few new conversations
@@ -519,5 +519,5 @@ For issues or questions:
 
 ---
 
-**Built for Connor's annex project**
+**Built for Connor's claudex project**
 *Zero-effort conversation intelligence*

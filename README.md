@@ -1,4 +1,4 @@
-# Annex - Claude Code Skills
+# Claudex - Claude Code Skills
 
 > A curated collection of experimental skills for [Claude Code](https://claude.com/claude-code)
 
@@ -26,10 +26,10 @@ Install skills globally to use them across all your projects:
 
 ```bash
 # Clone this repository
-git clone https://github.com/cskiro/annex.git
+git clone https://github.com/cskiro/claudex.git
 
 # Install a skill globally
-cp -r annex/codebase-auditor ~/.claude/skills/
+cp -r claudex/codebase-auditor ~/.claude/skills/
 
 # Use in any project
 cd /path/to/your-project
@@ -43,7 +43,7 @@ Install skills for a specific project only:
 ```bash
 # In your project directory
 mkdir -p .claude/skills
-cp -r /path/to/annex/codebase-auditor .claude/skills/
+cp -r /path/to/claudex/codebase-auditor .claude/skills/
 
 # Skill now available only in this project
 ```
@@ -110,7 +110,7 @@ Automatically processes Claude Code conversation history, enables RAG-powered se
 ## Repository Structure
 
 ```
-annex/
+claudex/
 ├── codebase-auditor/              # General codebase auditor
 │   ├── SKILL.md                   # Skill definition
 │   ├── README.md                  # Documentation
