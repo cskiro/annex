@@ -51,7 +51,7 @@ Process your existing conversations:
 python scripts/conversation-processor.py --project-name annex --verbose --stats
 
 # Build semantic search index
-python scripts/rag-indexer.py --verbose --stats
+python scripts/rag_indexer.py --verbose --stats
 ```
 
 This one-time setup will:
@@ -121,7 +121,7 @@ User: "Show me files I've modified most often"
 │
 ├── scripts/                   # Core functionality
 │   ├── conversation-processor.py   # Parse JSONL, extract metadata
-│   ├── rag-indexer.py              # Build vector embeddings
+│   ├── rag_indexer.py              # Build vector embeddings
 │   ├── search-conversations.py     # Search interface
 │   └── insight-generator.py        # Report generation
 │
@@ -164,13 +164,13 @@ Options:
 - SQLite database at `.processed/conversations.db`
 - Processing state for incremental updates
 
-### rag-indexer.py
+### rag_indexer.py
 
 Build vector embeddings for semantic search.
 
 **Usage:**
 ```bash
-python scripts/rag-indexer.py [OPTIONS]
+python scripts/rag_indexer.py [OPTIONS]
 
 Options:
   --db-path PATH         Database path
@@ -313,7 +313,7 @@ All processed data is stored locally in `.processed/` (gitignored):
 
 **Problem:** Import error when running search-conversations.py
 
-**Solution:** This was fixed in the global installation by renaming `rag-indexer.py` to `rag_indexer.py`. Python module names cannot contain dashes. If you encounter this:
+**Solution:** Python module names cannot contain dashes. The file is now named `rag_indexer.py` (underscore, not dash). If you encounter import errors:
 ```bash
 cd ~/.claude/skills/cc-insights/scripts
 # Verify the file is named with underscore (not dash)
@@ -363,10 +363,10 @@ pip install sentence-transformers chromadb jinja2 click python-dateutil
 **Solution:**
 ```bash
 # Use smaller batch size
-python scripts/rag-indexer.py --batch-size 16
+python scripts/rag_indexer.py --batch-size 16
 
 # Or use faster model (lower quality)
-python scripts/rag-indexer.py --model all-MiniLM-L6-v2
+python scripts/rag_indexer.py --model all-MiniLM-L6-v2
 ```
 
 ### "Out of memory"
@@ -376,7 +376,7 @@ python scripts/rag-indexer.py --model all-MiniLM-L6-v2
 **Solution:**
 ```bash
 # Smaller batch size
-python scripts/rag-indexer.py --batch-size 8
+python scripts/rag_indexer.py --batch-size 8
 
 # Or process in chunks by date
 python scripts/conversation-processor.py --date-from 2025-10-01 --date-to 2025-10-15
@@ -398,7 +398,7 @@ The system automatically handles incremental updates:
 ```bash
 # Daily/weekly: Run both for new conversations
 python scripts/conversation-processor.py --project-name annex
-python scripts/rag-indexer.py
+python scripts/rag_indexer.py
 
 # Takes <5s if only a few new conversations
 ```
@@ -480,7 +480,7 @@ Potential additions (not currently implemented):
 A: Never, unless changing models. Use incremental updates.
 
 **Q: Can I change the embedding model?**
-A: Yes, use `--model` flag with rag-indexer.py, then `--rebuild`.
+A: Yes, use `--model` flag with rag_indexer.py, then `--rebuild`.
 
 **Q: Does this work with incognito mode?**
 A: No, incognito conversations aren't saved to JSONL files.

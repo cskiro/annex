@@ -383,12 +383,12 @@ Options:
 - Stores in SQLite for fast queries
 - Tracks processing state for incremental updates
 
-### rag-indexer.py
+### rag_indexer.py
 **Purpose**: Build vector embeddings for semantic search
 
 **Usage**:
 ```bash
-python scripts/rag-indexer.py [options]
+python scripts/rag_indexer.py [options]
 
 Options:
   --model MODEL         Embedding model (default: all-MiniLM-L6-v2)
@@ -535,7 +535,7 @@ python scripts/conversation-processor.py --verbose --reindex
 **Solution**:
 ```bash
 # Rebuild with optimizations
-python scripts/rag-indexer.py --rebuild --batch-size 64
+python scripts/rag_indexer.py --rebuild --batch-size 64
 ```
 
 ### "Dashboard won't start"
@@ -551,7 +551,7 @@ PORT=3001 npm run dev  # Use different port
 **Cause**: Processing too many conversations at once
 **Solution**:
 ```bash
-python scripts/rag-indexer.py --batch-size 16  # Smaller batches
+python scripts/rag_indexer.py --batch-size 16  # Smaller batches
 ```
 
 ## Privacy & Security
