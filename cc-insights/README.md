@@ -15,6 +15,18 @@ This skill transforms your Claude Code conversations into actionable insights wi
 - 🎯 **Zero Manual Effort**: Fully automatic processing of existing conversations
 - 🚀 **Fast Performance**: <1s search, <10s report generation
 
+## Installation Status
+
+✅ **Globally Installed and Operational** (October 26, 2025)
+
+- **Location**: `~/.claude/skills/cc-insights/`
+- **Database**: 19 conversations indexed (5 annex + 14 heisenberg)
+- **Messages**: 5,003 total (1,667 user, 2,341 assistant)
+- **RAG Index**: 19 conversations embedded with all-MiniLM-L6-v2 (384-dim)
+- **Status**: Fully functional and ready for use across all projects
+
+**Cross-Project Support**: This skill uses a global database, enabling insights across multiple projects (annex, heisenberg, etc.).
+
 ## Quick Start
 
 ### 1. Installation
@@ -296,6 +308,17 @@ All processed data is stored locally in `.processed/` (gitignored):
 | Weekly report generation | <10s | Includes visualizations |
 
 ## Troubleshooting
+
+### "Cannot import rag_indexer"
+
+**Problem:** Import error when running search-conversations.py
+
+**Solution:** This was fixed in the global installation by renaming `rag-indexer.py` to `rag_indexer.py`. Python module names cannot contain dashes. If you encounter this:
+```bash
+cd ~/.claude/skills/cc-insights/scripts
+# Verify the file is named with underscore (not dash)
+ls rag_indexer.py
+```
 
 ### "Database not found"
 

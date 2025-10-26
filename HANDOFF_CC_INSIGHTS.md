@@ -3,7 +3,7 @@
 **Date**: October 26, 2025
 **Project**: annex - Claude Code Skills Repository
 **Branch**: `feature/cc-insights`
-**Status**: ✅ Implementation Complete, ⚠️ Installation In Progress
+**Status**: ✅ Implementation Complete, ✅ Global Installation Complete, ✅ Fully Operational
 
 ---
 
@@ -78,14 +78,17 @@ cc-insights/
 5. **Global Installation**: Copied to `~/.claude/skills/cc-insights/`
 6. **Multi-Project DB**: Processing both annex (5 convs) and heisenberg (14 convs) into shared database
 
-### ⚠️ In Progress
+### ✅ Completed Installation
 
-**Global Installation Setup** (90% complete):
+**Global Installation Setup** (100% complete):
 - ✅ Skill installed at `~/.claude/skills/cc-insights/`
 - ✅ Database created at `~/.claude/skills/cc-insights/.processed/conversations.db`
 - ✅ Annex conversations processed (5 conversations)
 - ✅ Heisenberg conversations processed (14 conversations)
-- ⏸️ **Interrupted**: Building semantic search index (was running when interrupted)
+- ✅ RAG semantic search index built (19 conversations, 384-dim embeddings)
+- ✅ Semantic search tested and operational
+- ✅ Insights generation tested and operational
+- ✅ Import issue fixed (renamed rag-indexer.py → rag_indexer.py)
 
 **Current Database Stats**:
 - **Total conversations**: 19 (5 annex + 14 heisenberg)
@@ -97,46 +100,22 @@ cc-insights/
 
 ---
 
-## Immediate Next Steps
+## Completion Summary
 
-### 1. Complete RAG Index Build (5 minutes)
+### ✅ All Setup Steps Completed
 
-The indexing process was interrupted. Resume with:
+1. **✅ RAG Index Built**: 19 conversations indexed with 384-dim embeddings (~2 seconds)
+2. **✅ Installation Tested**:
+   - Semantic search: Query "React accessibility testing" returned 5 ranked results
+   - Insights generation: Weekly report generated with activity timeline, file hotspots, tool usage
+3. **✅ Import Issue Fixed**: Renamed rag-indexer.py → rag_indexer.py
+4. **✅ Documentation Updated**: README.md includes installation status and troubleshooting
 
-```bash
-cd ~/.claude/skills/cc-insights
+### Next Steps for Future Sessions
 
-python3 scripts/rag-indexer.py \
-  --db-path ~/.claude/skills/cc-insights/.processed/conversations.db \
-  --embeddings-dir ~/.claude/skills/cc-insights/.processed/embeddings \
-  --verbose \
-  --stats
-```
+#### Test from Other Projects
 
-**Expected**: Indexes 19 conversations, creates embeddings (~2 minutes)
-
-### 2. Test the Installation (2 minutes)
-
-Verify everything works:
-
-```bash
-cd ~/.claude/skills/cc-insights
-
-# Test search
-python3 scripts/search-conversations.py \
-  --db-path ~/.claude/skills/cc-insights/.processed/conversations.db \
-  --embeddings-dir ~/.claude/skills/cc-insights/.processed/embeddings \
-  "React accessibility" \
-  --limit 5
-
-# Test insights
-python3 scripts/insight-generator.py weekly \
-  --db-path ~/.claude/skills/cc-insights/.processed/conversations.db
-```
-
-### 3. Verify Skill Recognition (1 minute)
-
-Start a new Claude Code session in heisenberg and ask:
+Start a new Claude Code session in heisenberg and verify:
 
 ```
 "What skills do you have access to?"
@@ -144,9 +123,9 @@ Start a new Claude Code session in heisenberg and ask:
 
 Should see: codebase-auditor, bulletproof-react-auditor, claude-md-auditor, **cc-insights**
 
-### 4. Natural Language Testing (5 minutes)
+#### Natural Language Usage
 
-Try these prompts in heisenberg project:
+Try these prompts from any project:
 
 ```
 "Search my conversations about React performance"
@@ -155,11 +134,28 @@ Try these prompts in heisenberg project:
 "Find conversations where I used the Write tool"
 ```
 
+#### Maintenance
+
+To add new conversations:
+```bash
+cd ~/.claude/skills/cc-insights
+python3 scripts/conversation-processor.py --project-name [project] --verbose
+python3 scripts/rag_indexer.py --verbose
+```
+
 ---
 
 ## Key Technical Insights
 
-### 1. Claude Code JSONL Format
+### 1. Python Module Naming (Critical Fix)
+
+**Issue Discovered**: The original file `rag-indexer.py` used a dash in the filename, which Python cannot import as a module. This caused import errors when `search-conversations.py` tried to import `RAGIndexer`.
+
+**Solution**: Renamed `rag-indexer.py` → `rag_indexer.py` in the global installation at `~/.claude/skills/cc-insights/scripts/`.
+
+**Lesson**: Python module names must use underscores, not dashes. This is critical for any Python files that need to import from each other.
+
+### 2. Claude Code JSONL Format
 
 **Structure Discovery**:
 ```json
@@ -446,7 +442,7 @@ Create a conversation insights skill that **automatically** transforms Claude Co
 
 ---
 
-**Generated**: October 26, 2025
+**Generated**: October 26, 2025 12:10 PM
 **Branch**: `feature/cc-insights`
-**Commit**: `f988a3c`
-**Status**: 🟡 90% Complete - Indexing in Progress
+**Commit**: `f988a3c` (updated)
+**Status**: 🟢 100% Complete - Fully Operational
