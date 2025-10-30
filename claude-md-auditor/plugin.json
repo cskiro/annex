@@ -1,0 +1,36 @@
+{
+  "name": "claude-md-auditor",
+  "version": "1.0.0-beta",
+  "description": "Validates and audits CLAUDE.md configuration files for Claude Code - ensures compliance with schema standards and best practices for LLM configuration",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/claude-md-auditor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "configuration",
+    "validation",
+    "claude-md",
+    "schema",
+    "best-practices",
+    "llm-config"
+  ],
+  "requirements": {
+    "python": ">=3.8"
+  },
+  "components": {
+    "agents": [
+      {
+        "name": "claude-md-auditor",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "tooling",
+    "status": "beta",
+    "tested": "1-2 projects locally"
+  }
+}
