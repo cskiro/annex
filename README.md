@@ -20,9 +20,58 @@ This repository contains skills that extend Claude Code's capabilities for commo
 
 ## Quick Start
 
-### Global Installation (Recommended)
+### Install via Marketplace (Recommended)
 
-Install skills globally to use them across all your projects:
+Add the claudex marketplace to your Claude Code:
+
+```bash
+/plugin marketplace add cskiro/claudex
+```
+
+Then browse and install skills:
+
+```bash
+# Browse all available skills
+/plugin
+
+# Or install specific skills directly
+/plugin install codebase-auditor@claudex
+/plugin install bulletproof-react-auditor@claudex
+/plugin install claude-md-auditor@claudex
+/plugin install cc-insights@claudex
+```
+
+### Team Configuration (Auto-Install)
+
+Add to your project's `.claude/settings.json` for automatic setup:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "claudex": {
+      "source": {
+        "source": "github",
+        "repo": "cskiro/claudex"
+      }
+    }
+  },
+  "enabledPlugins": [
+    "codebase-auditor@claudex",
+    "bulletproof-react-auditor@claudex",
+    "claude-md-auditor@claudex",
+    "cc-insights@claudex"
+  ]
+}
+```
+
+When team members trust your repository, these plugins install automatically.
+
+### Manual Installation (Legacy)
+
+<details>
+<summary>Click to expand legacy installation instructions</summary>
+
+#### Global Installation
 
 ```bash
 # Clone this repository
@@ -36,9 +85,7 @@ cd /path/to/your-project
 # In Claude Code, just ask: "Audit this codebase"
 ```
 
-### Project-Local Installation
-
-Install skills for a specific project only:
+#### Project-Local Installation
 
 ```bash
 # In your project directory
@@ -47,6 +94,10 @@ cp -r /path/to/claudex/codebase-auditor .claude/skills/
 
 # Skill now available only in this project
 ```
+
+**Note**: Manual installation is deprecated in favor of marketplace installation. See [Migration Guide](./docs/MIGRATION_GUIDE.md) for upgrade instructions.
+
+</details>
 
 ## Available Skills
 
@@ -179,15 +230,17 @@ Have a useful skill to share? Contributions welcome!
 ## Best Practices
 
 ✅ **Do:**
-- Install frequently-used skills globally (`~/.claude/skills/`)
-- Keep skill-specific docs in the skill directory
-- Use descriptive natural language when invoking skills
+- Install skills via marketplace for automatic updates: `/plugin install skill-name@claudex`
+- Use team configuration (`.claude/settings.json`) to standardize plugins across projects
+- Pin specific versions for production stability (when available)
 - Review generated reports before taking action
+- Use descriptive natural language when invoking skills
 
 ⚠️ **Don't:**
+- Manually copy skills anymore (use marketplace installation)
 - Commit `.claude/skills/` in projects (already in `.gitignore`)
 - Store sensitive data in skill directories
-- Modify global skills for project-specific needs (use local copy instead)
+- Skip version pinning in production environments
 
 ## Documentation
 
@@ -198,7 +251,8 @@ Have a useful skill to share? Contributions welcome!
 - [cc-insights](./cc-insights/README.md) - Conversation analysis & semantic search
 
 ### General Documentation
-- [Skill Installation Guide](./docs/SKILL_INSTALLATION_GUIDE.md) - Complete setup instructions
+- [Migration Guide](./docs/MIGRATION_GUIDE.md) - Upgrade from manual to marketplace installation
+- [Skill Installation Guide](./docs/SKILL_INSTALLATION_GUIDE.md) - Complete setup instructions (legacy)
 - [Handoff Summaries](./docs/) - Development session summaries
 
 ## Requirements

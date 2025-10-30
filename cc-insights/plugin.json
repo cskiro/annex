@@ -1,0 +1,46 @@
+{
+  "name": "cc-insights",
+  "version": "2.0.0-beta",
+  "description": "RAG-powered conversation analysis and semantic search - automatically processes Claude Code conversation history and generates intelligent insight reports about development patterns",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/cc-insights",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "rag",
+    "semantic-search",
+    "analytics",
+    "insights",
+    "conversation-analysis",
+    "pattern-detection",
+    "chromadb"
+  ],
+  "requirements": {
+    "python": ">=3.8",
+    "packages": [
+      "sentence-transformers",
+      "chromadb",
+      "jinja2",
+      "click",
+      "python-dateutil"
+    ]
+  },
+  "components": {
+    "agents": [
+      {
+        "name": "cc-insights",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "productivity",
+    "status": "beta",
+    "tested": "1-2 projects locally",
+    "diskSpace": "~500MB for 1,000 conversations",
+    "memory": "~2GB RAM for embedding generation"
+  }
+}

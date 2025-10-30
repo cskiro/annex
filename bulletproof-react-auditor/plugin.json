@@ -1,0 +1,37 @@
+{
+  "name": "bulletproof-react-auditor",
+  "version": "1.0.0-beta",
+  "description": "React application auditor based on the comprehensive Bulletproof React architecture guide - evaluates React projects against production-ready standards",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/bulletproof-react-auditor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "architecture",
+    "best-practices",
+    "bulletproof-react",
+    "component-patterns",
+    "state-management"
+  ],
+  "requirements": {
+    "python": ">=3.8"
+  },
+  "components": {
+    "agents": [
+      {
+        "name": "bulletproof-react-auditor",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "analysis",
+    "status": "beta",
+    "tested": "1-2 projects locally"
+  }
+}
