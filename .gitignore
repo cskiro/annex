@@ -9,7 +9,6 @@ Desktop.ini
 
 # Internal documentation and planning
 docs/
-!docs/SKILL_TEMPLATE.md
 
 # Environment files
 .env
