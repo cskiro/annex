@@ -1,18 +1,37 @@
 # macOS
 .DS_Store
+Thumbs.db
+Desktop.ini
 
 # Claude Code local settings and skills
 .claude/settings.local.json
 .claude/skills/
 
-# Internal handoff documentation (private session summaries and planning docs)
-docs/INTERNAL_ROADMAP.md
-docs/CODEBASE_AUDITOR_SKILL.md
-docs/SKILL_INSTALLATION_GUIDE.md
-docs/cc-skills/
-docs/features/
-docs/prd/
-docs/requirements/
+# Internal documentation and planning
+docs/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Secrets and credentials
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets.yaml
+secrets.yml
 
 # Python
 __pycache__/
@@ -20,6 +39,14 @@ __pycache__/
 *$py.class
 *.so
 .Python
+*.egg-info/
+dist/
+build/
+
+# Test coverage
+.coverage
+coverage/
+htmlcov/
 
 # Audit outputs (from codebase-auditor and bulletproof-react-auditor skills)
 *.report.md
