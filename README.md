@@ -10,7 +10,7 @@
 - **Code Quality & Security** - Automated auditing against modern SDLC standards
 - **Architecture Patterns** - React/TypeScript application validation
 - **Observability** - OpenTelemetry setup and configuration automation
-- **Developer Productivity** - Conversation analysis and semantic search
+- **Developer Productivity** - Conversation analysis, semantic search, and parallel development workflows
 - **Configuration Management** - CLAUDE.md validation and compliance
 
 **Status:** Proof of concept (v0.1.0) - All skills tested locally on 1-2 projects. Not production-validated.
@@ -71,6 +71,7 @@ Then browse and install skills:
 /plugin install claude-md-auditor@claudex
 /plugin install cc-insights@claudex
 /plugin install otel-monitoring-setup@claudex
+/plugin install git-worktree-setup@claudex
 ```
 
 ### Option 2: Team Configuration (Auto-Install)
@@ -92,7 +93,8 @@ Add to your project's `.claude/settings.json` for automatic setup:
     "bulletproof-react-auditor@claudex",
     "claude-md-auditor@claudex",
     "cc-insights@claudex",
-    "otel-monitoring-setup@claudex"
+    "otel-monitoring-setup@claudex",
+    "git-worktree-setup@claudex"
   ]
 }
 ```
@@ -109,6 +111,7 @@ When team members trust your repository, these plugins install automatically.
 | **[bulletproof-react-auditor](./bulletproof-react-auditor/)** | React application auditor based on Bulletproof React architecture guide. Evaluates project structure, component patterns, state management, and performance. | `0.1.0` | Analysis |
 | **[claude-md-auditor](./claude-md-auditor/)** | Validates CLAUDE.md configuration files against official schema standards and community best practices for LLM context optimization. | `0.1.0` | Tooling |
 | **[cc-insights](./cc-insights/)** | RAG-powered conversation analysis with semantic search. Automatically processes Claude Code history to generate insight reports and detect development patterns. | `0.1.0` | Productivity |
+| **[git-worktree-setup](./git-worktree-setup/)** | Automated git worktree creation for parallel Claude Code sessions. Enables working on multiple branches simultaneously with full development environment setup. | `0.1.0` | Productivity |
 | **[otel-monitoring-setup](./otel-monitoring-setup/)** | Automated OpenTelemetry setup with local PoC mode (Docker stack + Grafana) and enterprise mode. Includes validation scripts and troubleshooting. | `0.1.0` | DevOps |
 
 **All skills are currently at version 0.1.0 (proof of concept)**. Production-ready versions will follow semantic versioning with git tags after successful merges to main.
