@@ -20,17 +20,44 @@ Automated workflow for setting up OpenTelemetry telemetry collection for Claude 
 
 ## Quick Start
 
-### Prerequisites
+### Prerequisites Check
+
+**RECOMMENDED:** Run the pre-flight check script before setup:
+
+```bash
+bash templates/preflight-check.sh
+```
+
+This will verify all prerequisites automatically. Alternatively, check manually:
 
 **For Mode 1 (Local PoC):**
-- Docker Desktop installed and running
-- Claude Code installed
-- Write access to `~/.claude/settings.json`
+- ✅ Docker Desktop installed and running
+- ✅ Claude Code installed
+- ✅ Write access to `~/.claude/settings.json`
+- ✅ Ports available: 3000, 4317, 4318, 8889, 9090
+- ✅ 5GB+ free disk space
 
 **For Mode 2 (Enterprise):**
-- OTEL Collector endpoint URL
-- Authentication credentials
-- Write access to `~/.claude/settings.json`
+- ✅ OTEL Collector endpoint URL
+- ✅ Authentication credentials
+- ✅ Write access to `~/.claude/settings.json`
+
+### Critical Configuration Requirements
+
+⚠️ **IMPORTANT:** These settings are REQUIRED in `~/.claude/settings.json`:
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_METRICS_EXPORTER": "otlp",    // CRITICAL - metrics won't send without this
+    "OTEL_LOGS_EXPORTER": "otlp",        // CRITICAL - logs won't send without this
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317"
+  }
+}
+```
+
+**Missing `OTEL_METRICS_EXPORTER` or `OTEL_LOGS_EXPORTER` will cause silent failure** - telemetry appears enabled but no data is sent.
 
 ### Installation
 
@@ -73,22 +100,62 @@ This skill is designed to be invoked by Claude Code. No manual installation requ
 
 ---
 
+## Common Pitfalls & Fixes
+
+### Issue 1: OTEL Collector Crashes on Startup
+
+**Symptom:** `docker logs claude-otel-collector` shows configuration errors
+
+**Root Causes:**
+1. ❌ `otlphttp/loki` exporter not available in standard collector image
+2. ❌ Deprecated `logging` exporter (use `debug` instead)
+3. ❌ Deprecated `address` field in `service.telemetry.metrics`
+
+**Solution:** Use the provided templates which have these issues fixed.
+
+### Issue 2: No Metrics Appearing in Grafana
+
+**Symptom:** Grafana dashboards show "No data"
+
+**Root Causes:**
+1. ❌ Missing `OTEL_METRICS_EXPORTER: "otlp"` in settings.json
+2. ❌ Missing `OTEL_LOGS_EXPORTER: "otlp"` in settings.json
+3. ❌ Claude Code not restarted after settings change
+
+**Solution:**
+- Add both exporter variables to settings.json
+- Completely restart Claude Code (settings only load at startup)
+- Wait 60 seconds for metrics to export
+
+### Issue 3: Containers Keep Restarting
+
+**Solution:** Check logs and verify configuration against templates:
+
+```bash
+docker logs claude-otel-collector --tail 50
+bash templates/verify-setup.sh
+```
+
+---
+
 ## Directory Structure
 
 ```
-claude-code-otel-setup/
+otel-monitoring-setup/
 ├── SKILL.md                  # Main skill definition
 ├── README.md                 # This file
 ├── modes/
 │   ├── mode1-poc-setup.md    # Detailed local setup workflow
 │   └── mode2-enterprise.md   # Detailed enterprise setup workflow
 ├── templates/
-│   ├── docker-compose.yml    # Docker Compose configuration
-│   ├── otel-collector-config.yml  # OTEL Collector configuration
+│   ├── docker-compose.yml    # Docker Compose configuration (Loki optional)
+│   ├── otel-collector-config.yml  # OTEL Collector config (fixed)
 │   ├── prometheus.yml        # Prometheus scrape configuration
 │   ├── grafana-datasources.yml    # Grafana datasource provisioning
-│   ├── settings.json.local   # Local telemetry settings template
-│   ├── settings.json.enterprise  # Enterprise settings template
+│   ├── settings.json.local   # Complete local settings template
+│   ├── settings.json.enterprise  # Complete enterprise settings template
+│   ├── preflight-check.sh    # Pre-flight validation script (NEW)
+│   ├── verify-setup.sh       # Post-setup verification script (NEW)
 │   ├── start-telemetry.sh    # Start script
 │   └── stop-telemetry.sh     # Stop script
 ├── dashboards/

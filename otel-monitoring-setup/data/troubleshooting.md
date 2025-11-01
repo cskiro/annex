@@ -4,6 +4,22 @@ Common issues and solutions for Claude Code OpenTelemetry setup.
 
 ---
 
+## Quick Diagnostics
+
+**Before manual troubleshooting, run these automated scripts:**
+
+```bash
+# Pre-flight check (before setup)
+bash templates/preflight-check.sh
+
+# Setup verification (after setup)
+bash templates/verify-setup.sh
+```
+
+These scripts will automatically detect most common issues and provide specific fixes.
+
+---
+
 ## Container Issues
 
 ### Docker Not Running
@@ -39,13 +55,42 @@ docker compose logs prometheus
 
 **Common Causes:**
 
-**1. OTEL Collector Configuration Error**
+**1. OTEL Collector Configuration Error - Loki Exporter**
+
+**Symptom:**
+```bash
+docker logs claude-otel-collector
+# Error: failed to get config: cannot unmarshal the configuration
+# '' has invalid keys: otlphttp/loki
+```
+
+**Root Cause:** The `otlphttp/loki` exporter is not available in the standard OTEL Collector image.
+
+**Solution:** Update `otel-collector-config.yml` to remove Loki exporter:
+```yaml
+exporters:
+  # Remove this:
+  # otlphttp/loki:
+  #   endpoint: http://loki:3100/otlp
+
+  # Keep only:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+  debug:
+    verbosity: normal
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resource]
+      exporters: [debug]  # Changed from [otlphttp/loki, debug]
+```
+
+**2. Deprecated Logging Exporter**
 ```bash
 # Check for errors
-docker compose logs otel-collector | grep -i error
-
-# Common issue: deprecated logging exporter
-# Fix: Use 'debug' exporter instead
+docker compose logs otel-collector | grep -i "logging exporter"
 ```
 
 **Solution:** Update `otel-collector-config.yml`:
@@ -56,6 +101,27 @@ exporters:
   # NOT:
   # logging:
   #   loglevel: info
+```
+
+**3. Deprecated Address Field**
+
+**Symptom:**
+```bash
+docker logs claude-otel-collector
+# Error: '' has invalid keys: address
+```
+
+**Root Cause:** The `address` field in `service.telemetry.metrics` is deprecated in newer OTEL Collector versions.
+
+**Solution:** Remove the address field from otel-collector-config.yml:
+```yaml
+service:
+  telemetry:
+    logs:
+      level: info
+    # Remove this entire metrics section:
+    # metrics:
+    #   address: localhost:8888
 ```
 
 **2. Port Already in Use**
@@ -121,25 +187,55 @@ jq '.env.CLAUDE_CODE_ENABLE_TELEMETRY' ~/.claude/settings.json
 # Should return: "1"
 ```
 
-**2. Check OTEL endpoint:**
+**2. CRITICAL: Check for REQUIRED OTEL exporter variables:**
+```bash
+# These are REQUIRED - metrics won't send without them!
+jq '.env.OTEL_METRICS_EXPORTER' ~/.claude/settings.json
+# Must return: "otlp"
+
+jq '.env.OTEL_LOGS_EXPORTER' ~/.claude/settings.json
+# Must return: "otlp"
+```
+
+**Common Issue:** Missing OTEL_METRICS_EXPORTER and OTEL_LOGS_EXPORTER
+
+Even if `CLAUDE_CODE_ENABLE_TELEMETRY` is set to "1", Claude Code will not send metrics unless these exporters are explicitly configured.
+
+**Solution:**
+```bash
+# Add to ~/.claude/settings.json under "env":
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_METRICS_EXPORTER": "otlp",
+    "OTEL_LOGS_EXPORTER": "otlp",
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
+    "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc"
+  }
+}
+```
+
+Then restart Claude Code completely.
+
+**3. Check OTEL endpoint:**
 ```bash
 jq '.env.OTEL_EXPORTER_OTLP_ENDPOINT' ~/.claude/settings.json
 # Should return: "http://localhost:4317" (for local setup)
 ```
 
-**3. Verify JSON is valid:**
+**4. Verify JSON is valid:**
 ```bash
 jq empty ~/.claude/settings.json
 # No output = valid JSON
 ```
 
-**4. Check if Claude Code was restarted:**
+**5. Check if Claude Code was restarted:**
 ```bash
 # Telemetry config only loads at startup!
 # Must quit and restart Claude Code completely
 ```
 
-**5. Test OTEL endpoint connectivity:**
+**6. Test OTEL endpoint connectivity:**
 ```bash
 nc -zv localhost 4317
 # Should show: Connection to localhost port 4317 [tcp/*] succeeded!

@@ -5,8 +5,14 @@
 .claude/settings.local.json
 .claude/skills/
 
-# Internal handoff documentation (private session summaries)
-docs/
+# Internal handoff documentation (private session summaries and planning docs)
+docs/INTERNAL_ROADMAP.md
+docs/CODEBASE_AUDITOR_SKILL.md
+docs/SKILL_INSTALLATION_GUIDE.md
+docs/cc-skills/
+docs/features/
+docs/prd/
+docs/requirements/
 
 # Python
 __pycache__/

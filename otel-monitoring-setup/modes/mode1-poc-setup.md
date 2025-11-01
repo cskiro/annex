@@ -15,6 +15,20 @@ Complete step-by-step process for setting up a local OpenTelemetry stack for Cla
 
 ## Phase 0: Prerequisites Verification
 
+**RECOMMENDED:** Run the automated pre-flight check script before manual verification:
+
+```bash
+# Download and run the pre-flight check
+curl -fsSL https://raw.githubusercontent.com/your-repo/otel-monitoring-setup/main/templates/preflight-check.sh | bash
+
+# Or if you have the skill installed:
+bash ~/.claude/skills/otel-monitoring-setup/templates/preflight-check.sh
+```
+
+The script will automatically check all prerequisites below. If you prefer manual verification, continue with the steps below.
+
+---
+
 ### Step 0.1: Check Docker Installation
 
 ```bash
@@ -82,7 +96,6 @@ The following ports are required but already in use:
 - 4318: OTEL Collector (HTTP)
 - 8889: OTEL Collector (Prometheus exporter)
 - 9090: Prometheus
-- 3100: Loki
 
 Options:
 1. Stop services using these ports
@@ -212,9 +225,12 @@ volumes:
 
 ### Step 2.2: Create OTEL Collector Configuration
 
-**Template:** `templates/otel-collector-config-template.yml`
+**Template:** `templates/otel-collector-config.yml`
 
-**CRITICAL:** Use `debug` exporter, not deprecated `logging` exporter
+**CRITICAL FIXES:**
+- ✅ Uses `debug` exporter (not deprecated `logging` exporter)
+- ✅ Removed `otlphttp/loki` exporter (not available in standard collector image)
+- ✅ No deprecated `address` field in telemetry section
 
 ```yaml
 receivers:
@@ -248,13 +264,7 @@ exporters:
     const_labels:
       source: claude_code_telemetry
 
-  # Export logs to Loki via OTLP HTTP
-  otlphttp/loki:
-    endpoint: http://loki:3100/otlp
-    tls:
-      insecure: true
-
-  # Debug exporter (replaces deprecated logging exporter)
+  # Debug exporter (outputs to console for troubleshooting)
   debug:
     verbosity: normal
 
@@ -268,11 +278,15 @@ service:
     logs:
       receivers: [otlp]
       processors: [memory_limiter, batch, resource]
-      exporters: [otlphttp/loki, debug]
+      exporters: [debug]
 
   telemetry:
     logs:
       level: info
+
+# NOTE: Log export to Loki requires additional configuration.
+# The otlphttp/loki exporter is not available in the standard collector image.
+# For log collection, consider using Promtail or Grafana Alloy as separate services.
 ```
 
 **Write to:** `~/.claude/telemetry/otel-collector-config.yml`
@@ -464,6 +478,12 @@ cat ~/.claude/settings.json
 
 ### Step 4.3: Merge Telemetry Configuration
 
+**CRITICAL:** The following variables are REQUIRED for telemetry to work:
+- ✅ `CLAUDE_CODE_ENABLE_TELEMETRY`: "1"
+- ✅ `OTEL_METRICS_EXPORTER`: "otlp" (REQUIRED - metrics won't send without this)
+- ✅ `OTEL_LOGS_EXPORTER`: "otlp" (REQUIRED - logs won't send without this)
+- ✅ `OTEL_EXPORTER_OTLP_ENDPOINT`: "http://localhost:4317"
+
 **Add to settings.json `env` section:**
 
 ```json
@@ -485,9 +505,11 @@ cat ~/.claude/settings.json
 }
 ```
 
-**Template:** `templates/settings-env-template.json`
+**Template:** Use `templates/settings.json.local` as a complete reference
 
-**Note:** Merge with existing env vars, don't replace entire settings file
+**IMPORTANT:**
+- Merge with existing env vars, don't replace entire settings file
+- Missing OTEL_METRICS_EXPORTER or OTEL_LOGS_EXPORTER will cause silent failure (no metrics sent)
 
 ### Step 4.4: Verify Settings Updated
 
@@ -586,6 +608,21 @@ curl -X POST http://admin:admin@localhost:3000/api/dashboards/db \
 ---
 
 ## Phase 6: Verification & Testing
+
+**RECOMMENDED:** Run the automated verification script:
+
+```bash
+# Run from telemetry directory
+cd ~/.claude/telemetry
+bash ../skills/otel-monitoring-setup/templates/verify-setup.sh
+
+# Or download directly
+curl -fsSL https://raw.githubusercontent.com/your-repo/otel-monitoring-setup/main/templates/verify-setup.sh | bash
+```
+
+The script will automatically verify all components below. For manual verification, continue with the steps below.
+
+---
 
 ### Step 6.1: Verify OTEL Collector Receiving Data
 

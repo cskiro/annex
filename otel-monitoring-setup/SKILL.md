@@ -1,6 +1,6 @@
 ---
 name: otel-monitoring-setup
-version: 1.0.0
+version: 0.1.0
 description: Automated OpenTelemetry setup for Claude Code with local PoC mode (full Docker stack with Grafana dashboards) and enterprise mode (connect to centralized infrastructure). Configures telemetry collection, verifies data flow, handles dashboard imports with datasource UID detection, and supports team rollout scenarios. Use for any OpenTelemetry setup task - local development, enterprise deployment, or team aggregation.
 author: Connor
 ---

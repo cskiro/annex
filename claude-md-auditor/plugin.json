@@ -1,6 +1,6 @@
 {
   "name": "claude-md-auditor",
-  "version": "1.0.0-beta",
+  "version": "0.1.0",
   "description": "Validates and audits CLAUDE.md configuration files for Claude Code - ensures compliance with schema standards and best practices for LLM configuration",
   "author": "Connor",
   "license": "Apache-2.0",
@@ -30,7 +30,7 @@
   },
   "metadata": {
     "category": "tooling",
-    "status": "beta",
+    "status": "proof-of-concept",
     "tested": "1-2 projects locally"
   }
 }

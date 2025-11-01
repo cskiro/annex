@@ -1,6 +1,6 @@
 {
   "name": "otel-monitoring-setup",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Automated OpenTelemetry setup for Claude Code with local PoC mode (full Docker stack with Grafana dashboards) and enterprise mode (connect to centralized infrastructure). Configures telemetry collection, verifies data flow, handles dashboard imports with datasource UID detection, and supports team rollout scenarios.",
   "author": "Connor",
   "license": "Apache-2.0",
@@ -34,9 +34,9 @@
   },
   "metadata": {
     "category": "devops",
-    "status": "stable",
+    "status": "proof-of-concept",
     "tested": "1-2 projects locally",
-    "diskSpace": "~500MB for Docker images and volumes",
-    "memory": "~1GB RAM for full stack (Collector + Prometheus + Grafana + Loki)"
+    "diskSpace": "~400MB for Docker images and volumes (Loki optional)",
+    "memory": "~800MB RAM for core stack (Collector + Prometheus + Grafana)"
   }
 }
