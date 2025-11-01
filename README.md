@@ -72,6 +72,8 @@ Then browse and install skills:
 /plugin install cc-insights@claudex
 /plugin install otel-monitoring-setup@claudex
 /plugin install git-worktree-setup@claudex
+/plugin install playwright-e2e-automation@claudex
+/plugin install skill-creator@claudex
 ```
 
 ### Option 2: Team Configuration (Auto-Install)
@@ -94,7 +96,9 @@ Add to your project's `.claude/settings.json` for automatic setup:
     "claude-md-auditor@claudex",
     "cc-insights@claudex",
     "otel-monitoring-setup@claudex",
-    "git-worktree-setup@claudex"
+    "git-worktree-setup@claudex",
+    "playwright-e2e-automation@claudex",
+    "skill-creator@claudex"
   ]
 }
 ```
@@ -113,6 +117,8 @@ When team members trust your repository, these plugins install automatically.
 | **[cc-insights](./cc-insights/)** | RAG-powered conversation analysis with semantic search. Automatically processes Claude Code history to generate insight reports and detect development patterns. | `0.1.0` | Productivity |
 | **[git-worktree-setup](./git-worktree-setup/)** | Automated git worktree creation for parallel Claude Code sessions. Enables working on multiple branches simultaneously with full development environment setup. | `0.1.0` | Productivity |
 | **[otel-monitoring-setup](./otel-monitoring-setup/)** | Automated OpenTelemetry setup with local PoC mode (Docker stack + Grafana) and enterprise mode. Includes validation scripts and troubleshooting. | `0.1.0` | DevOps |
+| **[playwright-e2e-automation](./playwright-e2e-automation/)** | Automated Playwright e2e testing framework with LLM-powered visual debugging, screenshot analysis, and regression testing. Zero-setup automation for React/Vite, Node.js, and full-stack apps. | `0.2.0` | Tooling |
+| **[skill-creator](./skill-creator/)** | Automated skill generation tool that creates production-ready Claude Code skills following Claudex marketplace standards with intelligent templates and quality validation. | `0.1.0` | Productivity |
 
 **All skills are currently at version 0.1.0 (proof of concept)**. Production-ready versions will follow semantic versioning with git tags after successful merges to main.
 

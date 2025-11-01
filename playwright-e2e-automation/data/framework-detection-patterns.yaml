@@ -1,0 +1,430 @@
+# Framework Detection Patterns
+# Used to automatically identify application type and determine optimal Playwright configuration
+
+# Detection happens in phases:
+# 1. Read package.json dependencies
+# 2. Check for config files
+# 3. Identify dev server command
+# 4. Determine base URL and port
+
+frameworks:
+  # ========== REACT + VITE ==========
+  react_vite:
+    name: "React + Vite"
+    priority: 1  # Check first (most common modern setup)
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "react"
+          - "vite"
+        optional:
+          - "react-dom"
+          - "@vitejs/plugin-react"
+
+      config_files:
+        - "vite.config.ts"
+        - "vite.config.js"
+        - "vite.config.mjs"
+
+      indicators:
+        - "src/main.tsx exists"
+        - "src/main.jsx exists"
+        - "index.html with Vite script tag"
+
+    configuration:
+      base_url: "http://localhost:5173"
+      dev_server_command: "npm run dev"
+      build_command: "npm run build"
+      preview_command: "npm run preview"
+
+      playwright_config:
+        timeout: 30000
+        retries: 2
+        use:
+          viewport: { width: 1280, height: 720 }
+          screenshot: "only-on-failure"
+          video: "retain-on-failure"
+
+        projects:
+          - name: "chromium"
+            use:
+              browserName: "chromium"
+          - name: "mobile"
+            use:
+              ...devices["iPhone 13"]
+
+        webServer:
+          command: "npm run dev"
+          url: "http://localhost:5173"
+          reuseExistingServer: true
+          timeout: 120000
+
+    test_generation:
+      entry_point: "src/App.tsx"
+      routing: "react-router-dom"  # If detected in dependencies
+      state_management: ["redux", "zustand", "jotai"]  # Check for these
+      common_pages:
+        - "/"
+        - "/about"
+        - "/contact"
+        - "/login"
+        - "/dashboard"
+
+  # ========== NEXT.JS ==========
+  nextjs:
+    name: "Next.js"
+    priority: 2
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "next"
+          - "react"
+        optional:
+          - "react-dom"
+
+      config_files:
+        - "next.config.js"
+        - "next.config.mjs"
+        - "next.config.ts"
+
+      indicators:
+        - "app/ directory exists"  # App Router
+        - "pages/ directory exists"  # Pages Router
+        - ".next/ directory exists"
+
+    configuration:
+      base_url: "http://localhost:3000"
+      dev_server_command: "npm run dev"
+      build_command: "npm run build"
+
+      playwright_config:
+        timeout: 45000  # Next.js can be slower on first load
+        retries: 2
+
+        webServer:
+          command: "npm run dev"
+          url: "http://localhost:3000"
+          reuseExistingServer: true
+          timeout: 120000
+
+    test_generation:
+      router_type: "app"  # or "pages" - detect from directory structure
+      entry_point: "app/page.tsx"  # App Router
+      api_routes: "app/api/"  # Check if API routes exist
+      common_pages:
+        - "/"
+        - "/about"
+        - "/blog"
+        - "/contact"
+
+  # ========== CREATE REACT APP ==========
+  create_react_app:
+    name: "Create React App"
+    priority: 3
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "react"
+          - "react-scripts"
+        optional:
+          - "react-dom"
+
+      config_files:
+        - "public/index.html"
+
+      indicators:
+        - "src/index.js exists"
+        - "src/index.tsx exists"
+        - "package.json scripts.start includes react-scripts"
+
+    configuration:
+      base_url: "http://localhost:3000"
+      dev_server_command: "npm start"
+      build_command: "npm run build"
+
+      playwright_config:
+        timeout: 30000
+        retries: 2
+
+        webServer:
+          command: "npm start"
+          url: "http://localhost:3000"
+          reuseExistingServer: true
+          timeout: 120000
+
+    test_generation:
+      entry_point: "src/App.js"
+      routing: "react-router-dom"
+
+  # ========== NODE.JS + EXPRESS ==========
+  express:
+    name: "Node.js + Express"
+    priority: 4
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "express"
+        optional:
+          - "ejs"
+          - "pug"
+          - "handlebars"
+
+      indicators:
+        - "app.js exists"
+        - "server.js exists"
+        - "index.js exists"
+        - "views/ directory exists"
+
+    configuration:
+      base_url: "http://localhost:3000"  # Default, check process.env.PORT
+      dev_server_command: "npm run dev"
+      alternative_commands:
+        - "npm start"
+        - "node server.js"
+        - "nodemon server.js"
+
+      playwright_config:
+        timeout: 30000
+        retries: 2
+
+        webServer:
+          command: "npm run dev"
+          url: "http://localhost:3000"
+          reuseExistingServer: true
+
+    test_generation:
+      entry_point: "server.js"
+      template_engine: "ejs"  # Detect from dependencies
+      api_endpoints: true  # Generate API tests
+      common_routes:
+        - "/"
+        - "/api/health"
+        - "/api/users"
+
+  # ========== STATIC HTML/CSS/JS ==========
+  static:
+    name: "Static HTML/CSS/JS"
+    priority: 10  # Check last (fallback)
+
+    detection:
+      indicators:
+        - "index.html exists in root"
+        - "No package.json"
+        - "No build tools detected"
+
+    configuration:
+      base_url: "http://localhost:8080"
+      dev_server_command: "npx serve ."
+      install_dev_server: "npm install -g serve"  # Install if needed
+
+      playwright_config:
+        timeout: 15000  # Faster, no build step
+        retries: 1
+
+        webServer:
+          command: "npx serve . -l 8080"
+          url: "http://localhost:8080"
+          reuseExistingServer: true
+
+    test_generation:
+      entry_point: "index.html"
+      detect_pages_from:
+        - "HTML files in root"
+        - "Links in index.html"
+
+  # ========== ASTRO ==========
+  astro:
+    name: "Astro"
+    priority: 5
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "astro"
+
+      config_files:
+        - "astro.config.mjs"
+
+      indicators:
+        - "src/pages/ directory exists"
+
+    configuration:
+      base_url: "http://localhost:4321"
+      dev_server_command: "npm run dev"
+
+      playwright_config:
+        webServer:
+          command: "npm run dev"
+          url: "http://localhost:4321"
+          reuseExistingServer: true
+
+  # ========== SVELTE + VITE ==========
+  svelte_vite:
+    name: "Svelte + Vite"
+    priority: 6
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "svelte"
+          - "vite"
+        optional:
+          - "@sveltejs/vite-plugin-svelte"
+
+      config_files:
+        - "svelte.config.js"
+        - "vite.config.js"
+
+    configuration:
+      base_url: "http://localhost:5173"
+      dev_server_command: "npm run dev"
+
+  # ========== VUE + VITE ==========
+  vue_vite:
+    name: "Vue + Vite"
+    priority: 7
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "vue"
+          - "vite"
+        optional:
+          - "@vitejs/plugin-vue"
+
+      config_files:
+        - "vite.config.ts"
+        - "vite.config.js"
+
+    configuration:
+      base_url: "http://localhost:5173"
+      dev_server_command: "npm run dev"
+
+  # ========== NUXT ==========
+  nuxt:
+    name: "Nuxt"
+    priority: 8
+
+    detection:
+      package_json_dependencies:
+        required:
+          - "nuxt"
+
+      config_files:
+        - "nuxt.config.ts"
+        - "nuxt.config.js"
+
+    configuration:
+      base_url: "http://localhost:3000"
+      dev_server_command: "npm run dev"
+
+# ========== DETECTION WORKFLOW ==========
+detection_workflow:
+  steps:
+    - name: "Check for package.json"
+      action: "Read package.json if exists"
+      output: "dependencies and devDependencies lists"
+
+    - name: "Match framework patterns"
+      action: "Compare dependencies against framework patterns"
+      priority: "Use priority field to determine order"
+      output: "List of matching frameworks (highest priority first)"
+
+    - name: "Verify with config files"
+      action: "Check if expected config files exist"
+      output: "Confirm framework match"
+
+    - name: "Check additional indicators"
+      action: "Verify directory structure and entry points"
+      output: "Final framework identification"
+
+    - name: "Determine dev server"
+      action: "Read package.json scripts section"
+      fallback: "Use framework's default dev_server_command"
+      output: "Command to start dev server"
+
+    - name: "Detect port"
+      action: "Check if server is already running"
+      fallback: "Use framework's default base_url port"
+      output: "Base URL for tests"
+
+# ========== PORT DETECTION ==========
+port_detection:
+  methods:
+    - name: "Check running processes"
+      command: "lsof -i :3000 -i :5173 -i :8080 -i :4321"
+      description: "See if common ports are in use"
+
+    - name: "Check package.json scripts"
+      pattern: "--port (\\d+)"
+      description: "Extract port from dev script"
+
+    - name: "Check config files"
+      files:
+        - "vite.config.ts": "server.port"
+        - "next.config.js": "devServer.port"
+        - ".env": "PORT"
+
+    - name: "Attempt connection"
+      ports: [3000, 5173, 8080, 4321, 8000, 4200]
+      description: "Try common ports in order"
+
+# ========== MULTI-APP DETECTION ==========
+fullstack_detection:
+  patterns:
+    monorepo:
+      indicators:
+        - "package.json with workspaces field"
+        - "packages/ or apps/ directory"
+        - "Lerna or Nx configuration"
+
+      strategy:
+        - "Detect each package separately"
+        - "Generate tests for each app"
+        - "Configure multiple web servers if needed"
+
+    separate_frontend_backend:
+      indicators:
+        - "client/ and server/ directories"
+        - "frontend/ and backend/ directories"
+        - "Multiple package.json files"
+
+      strategy:
+        - "Detect frontend framework"
+        - "Detect backend framework"
+        - "Start both servers for e2e tests"
+        - "Configure API proxy if needed"
+
+# ========== FALLBACK STRATEGY ==========
+fallback:
+  when_no_match:
+    - "Prompt user to specify framework manually"
+    - "List detected files and ask for clarification"
+    - "Suggest generic static server approach"
+
+  generic_config:
+    base_url: "http://localhost:8080"
+    dev_server: "npx serve . -l 8080"
+    timeout: 30000
+
+# ========== VALIDATION ==========
+validation:
+  checks:
+    - name: "Server starts successfully"
+      test: "Run dev server command, wait for port to open"
+      timeout: 120000
+      failure: "Ask user to start server manually"
+
+    - name: "Base URL accessible"
+      test: "HTTP GET to base_url returns 200"
+      timeout: 30000
+      failure: "Check if port is different, ask user"
+
+    - name: "Page renders content"
+      test: "Page has visible content (not blank)"
+      timeout: 10000
+      failure: "Possible SPA routing issue, check entry point"

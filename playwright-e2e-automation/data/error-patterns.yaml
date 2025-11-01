@@ -1,0 +1,415 @@
+# Error Pattern Recovery Database
+# Maps common error patterns to diagnosis and recovery steps
+
+# This file is used for:
+# 1. Pre-flight health checks - detect errors before running full test suite
+# 2. Test failure analysis - provide actionable fixes when tests fail
+# 3. User guidance - self-service troubleshooting
+
+# ========== CSS & STYLING ERRORS ==========
+css_errors:
+  tailwind_v4_syntax_mismatch:
+    pattern: "Cannot apply unknown utility class"
+    alternative_patterns:
+      - "Utilities must be known at build time"
+      - "Unknown utility class"
+
+    diagnosis: "Tailwind CSS v4 detected but v3 syntax used in CSS file"
+
+    severity: "critical"
+    category: "configuration"
+
+    root_cause: |
+      Tailwind CSS v4 changed from @tailwind directives to @import syntax.
+      Your CSS file likely still uses the old @tailwind directives.
+
+    detection_method: "console_error"
+
+    recovery_steps:
+      - step: "Identify your main CSS file"
+        details: "Usually src/index.css, src/App.css, or src/globals.css"
+
+      - step: "Update CSS directives"
+        from: |
+          @tailwind base;
+          @tailwind components;
+          @tailwind utilities;
+        to: |
+          @import "tailwindcss";
+        files_to_check:
+          - "src/index.css"
+          - "src/App.css"
+          - "src/globals.css"
+          - "src/styles/globals.css"
+
+      - step: "Update PostCSS configuration"
+        from: |
+          plugins: {
+            tailwindcss: {},
+            autoprefixer: {},
+          }
+        to: |
+          plugins: {
+            '@tailwindcss/postcss': {},
+            autoprefixer: {},
+          }
+        files_to_check:
+          - "postcss.config.js"
+          - "postcss.config.cjs"
+          - "postcss.config.mjs"
+
+      - step: "Restart dev server"
+        command: "npm run dev"
+        reason: "CSS changes require server restart"
+
+      - step: "Clear browser cache and reload"
+        details: "Hard refresh: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)"
+
+    prevention: |
+      The skill now detects Tailwind version and uses appropriate templates.
+      This error should not occur in new setups.
+
+    documentation: "https://tailwindcss.com/docs/upgrade-guide"
+
+    related_errors:
+      - "postcss_plugin_not_found"
+
+  postcss_plugin_not_found:
+    pattern: "Plugin tailwindcss not found"
+    alternative_patterns:
+      - "Cannot find module 'tailwindcss'"
+      - "postcss plugin tailwindcss not found"
+
+    diagnosis: "PostCSS configuration uses old Tailwind v3 plugin name with Tailwind v4"
+
+    severity: "critical"
+    category: "configuration"
+
+    root_cause: |
+      Tailwind CSS v4 renamed its PostCSS plugin from 'tailwindcss' to '@tailwindcss/postcss'.
+      Your postcss.config.js still references the old plugin name.
+
+    recovery_steps:
+      - step: "Update postcss.config.js"
+        from: |
+          export default {
+            plugins: {
+              tailwindcss: {},
+              autoprefixer: {},
+            },
+          };
+        to: |
+          export default {
+            plugins: {
+              '@tailwindcss/postcss': {},
+              autoprefixer: {},
+            },
+          };
+        file: "postcss.config.js"
+
+      - step: "Verify @tailwindcss/postcss is installed"
+        command: "npm list @tailwindcss/postcss"
+        if_not_installed: "npm install -D @tailwindcss/postcss"
+
+      - step: "Restart dev server"
+        command: "npm run dev"
+
+    documentation: "https://tailwindcss.com/docs/upgrade-guide#migrating-from-v3"
+
+# ========== ACCESSIBILITY ERRORS ==========
+accessibility_errors:
+  heading_hierarchy_violation:
+    pattern: "heading-order - Heading levels should only increase by one"
+    alternative_patterns:
+      - "Heading levels should increase by one"
+      - "heading-order violation"
+
+    diagnosis: "WCAG heading hierarchy violation - skipped heading levels"
+
+    severity: "moderate"
+    category: "accessibility"
+
+    root_cause: |
+      HTML heading elements (h1-h6) must follow logical order without skipping levels.
+      For example: h1 → h2 → h3 is correct, but h1 → h3 (skipping h2) is incorrect.
+
+    recovery_steps:
+      - step: "Locate the problematic heading in test output"
+        details: "Playwright accessibility tests will show file and line number"
+
+      - step: "Check heading hierarchy in that component"
+        example: |
+          ❌ Bad:
+          <h1>Page Title</h1>
+          <h3>Section</h3>  <!-- Skips h2 -->
+
+          ✅ Good:
+          <h1>Page Title</h1>
+          <h2>Section</h2>
+
+      - step: "Fix heading levels to follow order"
+        details: "Ensure each heading is only one level deeper than its parent"
+
+      - step: "Re-run accessibility tests"
+        command: "npm run test:e2e -- accessibility.spec.ts"
+
+    prevention: |
+      Always outline content structure before implementing:
+      - Page title: h1 (only one per page)
+      - Main sections: h2
+      - Subsections: h3
+      - Sub-subsections: h4
+
+    documentation: "https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html"
+
+  missing_form_labels:
+    pattern: "Form elements must have labels"
+    alternative_patterns:
+      - "label - Form elements must have labels"
+      - "Inputs must have associated labels"
+
+    diagnosis: "Form input missing associated label element"
+
+    severity: "high"
+    category: "accessibility"
+
+    root_cause: |
+      Every form input must have an associated <label> element for screen reader users.
+      Placeholder text alone is NOT sufficient.
+
+    recovery_steps:
+      - step: "Add label element to input"
+        from: |
+          <input type="email" placeholder="Email" />
+        to: |
+          <label htmlFor="email">Email Address</label>
+          <input id="email" type="email" placeholder="Email" />
+
+      - step: "Alternative: Use aria-label if visual label not desired"
+        example: |
+          <input
+            type="search"
+            aria-label="Search"
+            placeholder="Search..."
+          />
+
+      - step: "Ensure label and input are properly associated"
+        details: "Use 'htmlFor' attribute matching input 'id'"
+
+      - step: "Re-run accessibility tests"
+        command: "npm run test:e2e -- accessibility.spec.ts"
+
+    documentation: "https://www.w3.org/WAI/tutorials/forms/labels/"
+
+  insufficient_color_contrast:
+    pattern: "color-contrast - Elements must meet minimum color contrast ratio"
+    alternative_patterns:
+      - "color contrast ratio"
+      - "contrast ratio"
+
+    diagnosis: "Text or UI element has insufficient color contrast (WCAG 2.1 AA violation)"
+
+    severity: "high"
+    category: "accessibility"
+
+    root_cause: |
+      WCAG 2.1 AA requires:
+      - Normal text: 4.5:1 contrast ratio
+      - Large text (18pt+ or 14pt+ bold): 3:1 contrast ratio
+      - UI components: 3:1 contrast ratio
+
+    recovery_steps:
+      - step: "Identify low-contrast element from test output"
+        details: "Test results show which element and current ratio"
+
+      - step: "Use WebAIM contrast checker"
+        url: "https://webaim.org/resources/contrastchecker/"
+        details: "Test current colors and find compliant alternatives"
+
+      - step: "Update color values"
+        example: |
+          ❌ Bad: #AAAAAA on #FFFFFF (2.6:1 ratio)
+          ✅ Good: #595959 on #FFFFFF (7:1 ratio)
+
+          For Tailwind:
+          ❌ text-gray-400 → ✅ text-gray-700
+
+      - step: "Re-run accessibility tests"
+        command: "npm run test:e2e -- accessibility.spec.ts"
+
+    prevention: |
+      Use established color palettes with pre-tested contrast ratios.
+      Tailwind's default palette (500+ for text) generally meets WCAG AA.
+
+    documentation: "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html"
+
+# ========== BUILD & CONFIGURATION ERRORS ==========
+build_errors:
+  vite_port_in_use:
+    pattern: "Port 5173 is in use"
+    alternative_patterns:
+      - "EADDRINUSE"
+      - "address already in use"
+
+    diagnosis: "Vite dev server port already in use by another process"
+
+    severity: "moderate"
+    category: "environment"
+
+    recovery_steps:
+      - step: "Find process using port 5173"
+        command: "lsof -i :5173"
+        platforms: ["mac", "linux"]
+
+      - step: "Kill the process"
+        command: "kill -9 <PID>"
+        details: "Replace <PID> with process ID from previous command"
+
+      - step: "Alternative: Use different port"
+        details: "Add to vite.config.ts:"
+        config: |
+          server: {
+            port: 3000
+          }
+
+      - step: "Restart dev server"
+        command: "npm run dev"
+
+  playwright_browsers_not_installed:
+    pattern: "Executable doesn't exist"
+    alternative_patterns:
+      - "browserType.launch: Executable doesn't exist"
+      - "Browser not found"
+
+    diagnosis: "Playwright browser binaries not installed"
+
+    severity: "critical"
+    category: "installation"
+
+    recovery_steps:
+      - step: "Install Playwright browsers"
+        command: "npx playwright install"
+        details: "Downloads Chromium, Firefox, and WebKit"
+
+      - step: "Install system dependencies (Linux only)"
+        command: "npx playwright install-deps"
+        platforms: ["linux"]
+
+      - step: "Verify installation"
+        command: "npx playwright test --list"
+        expected: "Should list available tests without errors"
+
+  typescript_strict_errors:
+    pattern: "TypeScript strict mode errors"
+    alternative_patterns:
+      - "TS2345"
+      - "TS2322"
+      - "Type 'any' is not assignable"
+
+    diagnosis: "TypeScript strict mode violations in generated code"
+
+    severity: "moderate"
+    category: "type_safety"
+
+    recovery_steps:
+      - step: "Review TypeScript errors in output"
+        details: "Each error shows file, line, and type issue"
+
+      - step: "Add explicit type annotations"
+        example: |
+          ❌ const data = await fetch(url);
+          ✅ const data: Response = await fetch(url);
+
+      - step: "Use type assertions cautiously"
+        example: |
+          const element = page.locator('#id') as Locator;
+
+      - step: "Fix null/undefined handling"
+        example: |
+          ❌ const text = element.textContent();
+          ✅ const text = await element.textContent() ?? '';
+
+# ========== RESPONSIVE & LAYOUT ERRORS ==========
+layout_errors:
+  horizontal_scroll_mobile:
+    pattern: "Horizontal scroll detected on mobile viewport"
+
+    diagnosis: "Content wider than viewport on mobile, causing horizontal scroll"
+
+    severity: "moderate"
+    category: "responsive"
+
+    root_cause: |
+      Fixed-width elements or overflow content exceeds mobile viewport width.
+      Common causes: large images, wide tables, fixed px widths.
+
+    recovery_steps:
+      - step: "Identify overflowing element"
+        details: "Use browser DevTools → Elements → Computed → scroll width"
+
+      - step: "Make element responsive"
+        example: |
+          ❌ width: 800px;
+          ✅ max-width: 100%;
+
+          ❌ className="w-[800px]"
+          ✅ className="w-full max-w-screen-lg"
+
+      - step: "Add overflow handling"
+        example: |
+          className="overflow-x-auto"  // For tables
+          className="overflow-hidden"  // For containers
+
+      - step: "Test on mobile viewport"
+        command: "npm run test:e2e -- --project=mobile-chrome"
+
+# ========== RECOVERY STRATEGIES ==========
+recovery_strategies:
+  incremental_fix:
+    description: "Fix errors one at a time, test after each fix"
+    when_to_use: "Multiple related errors"
+    steps:
+      - "Fix highest severity error first"
+      - "Run tests to verify fix"
+      - "Move to next error"
+      - "Repeat until all errors resolved"
+
+  clean_slate:
+    description: "Remove generated files and regenerate"
+    when_to_use: "Configuration completely broken"
+    steps:
+      - "Delete generated playwright.config.ts"
+      - "Delete tests/ directory"
+      - "Clear node_modules/.cache/"
+      - "Re-run skill"
+
+  version_rollback:
+    description: "Downgrade to last working version"
+    when_to_use: "Breaking change in newly installed package"
+    steps:
+      - "Check package.json for recently updated packages"
+      - "Install previous version: npm install package@previous-version"
+      - "Lock version in package.json"
+      - "Test to confirm working"
+
+# ========== ERROR SEVERITY LEVELS ==========
+severity_definitions:
+  critical:
+    impact: "App won't build or run"
+    response_time: "Fix immediately"
+    examples: ["Syntax errors", "Missing dependencies", "Config errors"]
+
+  high:
+    impact: "Major functionality broken"
+    response_time: "Fix within hours"
+    examples: ["Accessibility violations", "Failed test cases", "Type errors"]
+
+  moderate:
+    impact: "Reduced usability or performance"
+    response_time: "Fix within days"
+    examples: ["Layout issues", "Minor accessibility", "Warnings"]
+
+  low:
+    impact: "Cosmetic or minor issues"
+    response_time: "Fix when convenient"
+    examples: ["Code style", "Documentation", "Minor visual bugs"]

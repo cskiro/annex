@@ -86,6 +86,49 @@
       ],
       "category": "productivity",
       "homepage": "https://github.com/cskiro/claudex/tree/main/cc-insights"
+    },
+    {
+      "name": "playwright-e2e-automation",
+      "source": "./playwright-e2e-automation",
+      "description": "Automated Playwright e2e testing framework with LLM-powered visual debugging, screenshot analysis, regression testing, and framework version detection",
+      "version": "0.2.0",
+      "author": "Connor",
+      "license": "Apache-2.0",
+      "keywords": [
+        "playwright",
+        "e2e-testing",
+        "visual-regression",
+        "screenshot-analysis",
+        "automated-testing",
+        "llm-debugging",
+        "testing",
+        "automation",
+        "accessibility"
+      ],
+      "category": "tooling",
+      "homepage": "https://github.com/cskiro/claudex/tree/main/playwright-e2e-automation"
+    },
+    {
+      "name": "skill-creator",
+      "source": "./skill-creator",
+      "description": "Automated skill generation tool that creates production-ready Claude Code skills following Claudex marketplace standards with intelligent templates, pattern detection, and quality validation",
+      "version": "0.1.0",
+      "author": "Connor",
+      "license": "Apache-2.0",
+      "keywords": [
+        "skill",
+        "generator",
+        "scaffolding",
+        "template",
+        "automation",
+        "marketplace",
+        "claudex",
+        "skill-creation",
+        "developer-tools",
+        "productivity"
+      ],
+      "category": "productivity",
+      "homepage": "https://github.com/cskiro/claudex/tree/main/skill-creator"
     }
   ]
 }

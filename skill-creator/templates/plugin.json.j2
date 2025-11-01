@@ -1,0 +1,39 @@
+{
+  "name": "{{ skill_name }}",
+  "version": "{{ version }}",
+  "description": "{{ description }}",
+  "author": "{{ author }}",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/{{ skill_name }}",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+{% for keyword in keywords -%}
+    "{{ keyword }}"{% if not loop.last %},{% endif %}
+
+{% endfor -%}
+  ],
+  {% if has_requirements -%}
+  "requirements": {
+    {% for req, version in requirements.items() -%}
+    "{{ req }}": "{{ version }}"{% if not loop.last %},{% endif %}
+
+    {% endfor -%}
+  },
+  {% endif -%}
+  "components": {
+    "agents": [
+      {
+        "name": "{{ skill_name }}",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "{{ category }}",
+    "status": "proof-of-concept",
+    "tested": "1-2 projects locally"
+  }
+}

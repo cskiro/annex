@@ -1,0 +1,70 @@
+{
+  "name": "playwright-e2e-automation",
+  "version": "0.2.0",
+  "description": "Automated Playwright e2e testing framework with LLM-powered visual debugging, screenshot analysis, regression testing, and framework version detection",
+  "author": "Connor",
+  "category": "tooling",
+  "tags": [
+    "playwright",
+    "e2e-testing",
+    "visual-regression",
+    "screenshot-analysis",
+    "automated-testing",
+    "llm-debugging",
+    "testing",
+    "automation",
+    "accessibility"
+  ],
+  "main": "SKILL.md",
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "CHANGELOG.md",
+    "data/",
+    "scripts/",
+    "templates/",
+    "examples/"
+  ],
+  "keywords": [
+    "playwright",
+    "e2e",
+    "testing",
+    "visual regression",
+    "screenshot",
+    "debugging",
+    "automation",
+    "LLM",
+    "accessibility",
+    "react",
+    "vite",
+    "nextjs",
+    "express"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "license": "Apache-2.0",
+  "requirements": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "components": {
+    "agents": [
+      {
+        "name": "playwright-e2e-automation",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "capabilities": [
+    "Automatic Playwright installation and setup",
+    "Multi-framework detection (React, Vite, Next.js, Express, static)",
+    "Screenshot-enabled test generation",
+    "LLM-powered visual analysis",
+    "Visual regression detection",
+    "Fix recommendation generation",
+    "Production-ready test suite export",
+    "CI/CD integration documentation"
+  ]
+}
