@@ -1,0 +1,42 @@
+{
+  "name": "otel-monitoring-setup",
+  "version": "0.1.0",
+  "description": "Automated OpenTelemetry setup for Claude Code with local PoC mode (full Docker stack with Grafana dashboards) and enterprise mode (connect to centralized infrastructure). Configures telemetry collection, verifies data flow, handles dashboard imports with datasource UID detection, and supports team rollout scenarios.",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/otel-monitoring-setup",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "opentelemetry",
+    "monitoring",
+    "observability",
+    "telemetry",
+    "grafana",
+    "prometheus",
+    "loki",
+    "otel-collector",
+    "devops"
+  ],
+  "requirements": {
+    "docker": ">=20.10.0",
+    "docker-compose": ">=2.0.0"
+  },
+  "components": {
+    "agents": [
+      {
+        "name": "otel-monitoring-setup",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "devops",
+    "status": "proof-of-concept",
+    "tested": "1-2 projects locally",
+    "diskSpace": "~400MB for Docker images and volumes (Loki optional)",
+    "memory": "~800MB RAM for core stack (Collector + Prometheus + Grafana)"
+  }
+}

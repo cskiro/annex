@@ -1,6 +1,6 @@
 {
   "name": "codebase-auditor",
-  "version": "1.0.0-beta",
+  "version": "0.1.0",
   "description": "Comprehensive static analysis tool that audits codebases for quality, security, and technical debt based on 2024-25 SDLC best practices (OWASP, WCAG, DORA)",
   "author": "Connor",
   "license": "Apache-2.0",
@@ -32,7 +32,7 @@
   },
   "metadata": {
     "category": "analysis",
-    "status": "beta",
+    "status": "proof-of-concept",
     "tested": "1-2 projects locally"
   }
 }
