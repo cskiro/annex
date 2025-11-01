@@ -1,0 +1,121 @@
+# Skill type definitions for determining structure and patterns
+# Each type maps to a complexity level and recommended pattern
+
+skill_types:
+  minimal:
+    name: "Minimal"
+    description: "Simple automation with single workflow"
+    complexity: "low"
+    structure:
+      required:
+        - "SKILL.md"
+        - "README.md"
+        - "plugin.json"
+        - "CHANGELOG.md"
+      optional: []
+    pattern: "phase-based"
+    use_when:
+      - "Single straightforward workflow"
+      - "No multiple modes or complex branching"
+      - "Minimal configuration needed"
+    examples:
+      - "Simple file formatters"
+      - "Basic code generators"
+      - "Single-purpose validators"
+
+  standard:
+    name: "Standard"
+    description: "Most common skills with reference materials"
+    complexity: "medium"
+    structure:
+      required:
+        - "SKILL.md"
+        - "README.md"
+        - "plugin.json"
+        - "CHANGELOG.md"
+      optional:
+        - "data/"
+        - "examples/"
+        - "templates/"
+    pattern: "phase-based"
+    use_when:
+      - "Sequential workflow with phases"
+      - "Needs reference materials"
+      - "Provides templates or examples"
+    examples:
+      - "codebase-auditor"
+      - "claude-md-auditor"
+
+  complex:
+    name: "Complex"
+    description: "Multiple modes with separate workflows"
+    complexity: "high"
+    structure:
+      required:
+        - "SKILL.md"
+        - "README.md"
+        - "plugin.json"
+        - "CHANGELOG.md"
+        - "modes/"
+      optional:
+        - "data/"
+        - "examples/"
+        - "templates/"
+        - "scripts/"
+    pattern: "mode-based"
+    use_when:
+      - "Multiple distinct operating modes"
+      - "Different workflows based on user intent"
+      - "Complex decision logic needed"
+    examples:
+      - "git-worktree-setup (single/batch/cleanup/list)"
+      - "Skills with multiple output formats"
+
+  data_processing:
+    name: "Data Processing"
+    description: "Skills that process, analyze, or transform data"
+    complexity: "high"
+    structure:
+      required:
+        - "SKILL.md"
+        - "README.md"
+        - "plugin.json"
+        - "CHANGELOG.md"
+        - "scripts/"
+      optional:
+        - "data/"
+        - "examples/"
+        - "templates/"
+        - "dashboard/" # optional web UI
+    pattern: "data-processing"
+    use_when:
+      - "Ingests data from files or APIs"
+      - "Performs analysis or transformation"
+      - "Generates insights or reports"
+      - "Needs helper scripts for processing"
+    examples:
+      - "cc-insights"
+      - "Log analyzers"
+      - "Metrics aggregators"
+
+# Pattern recommendations by skill purpose
+pattern_recommendations:
+  validation_audit:
+    primary_pattern: "validation"
+    secondary_pattern: "phase-based"
+    notes: "Use validation pattern for compliance checking, phase-based for workflow"
+
+  workflow_automation:
+    primary_pattern: "phase-based"
+    secondary_pattern: "mode-based"
+    notes: "Use phase-based for sequential steps, mode-based if multiple workflows"
+
+  multi_mode_operation:
+    primary_pattern: "mode-based"
+    secondary_pattern: null
+    notes: "Clear mode detection is critical for user experience"
+
+  data_analysis:
+    primary_pattern: "data-processing"
+    secondary_pattern: "phase-based"
+    notes: "Use data-processing for pipelines, phase-based for analysis stages"

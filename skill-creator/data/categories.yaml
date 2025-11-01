@@ -1,0 +1,54 @@
+# Valid skill categories for Claudex marketplace
+# Each category has a name, description, and example skills
+
+categories:
+  analysis:
+    name: "analysis"
+    description: "Code analysis, auditing, quality checking"
+    examples:
+      - "codebase-auditor"
+      - "claude-md-auditor"
+      - "bulletproof-react-auditor"
+    use_when:
+      - "Skill validates or audits code/configuration"
+      - "Skill detects issues and provides remediation"
+      - "Skill checks compliance against standards"
+
+  tooling:
+    name: "tooling"
+    description: "Development tools, configuration validators"
+    examples:
+      - "git-worktree-setup"
+    use_when:
+      - "Skill automates development workflows"
+      - "Skill manages development environment"
+      - "Skill provides developer utilities"
+
+  productivity:
+    name: "productivity"
+    description: "Developer workflow, automation, insights"
+    examples:
+      - "cc-insights"
+    use_when:
+      - "Skill improves developer efficiency"
+      - "Skill provides insights from data"
+      - "Skill automates repetitive tasks"
+
+  devops:
+    name: "devops"
+    description: "Infrastructure, deployment, monitoring"
+    examples:
+      - "claude-code-otel-setup"
+    use_when:
+      - "Skill manages infrastructure"
+      - "Skill handles deployment pipelines"
+      - "Skill sets up monitoring/observability"
+
+# Selection guidance
+selection_tips:
+  - "Choose the category that best describes the PRIMARY purpose"
+  - "If skill fits multiple categories, choose the most specific"
+  - "Analysis: Focus on checking/validating"
+  - "Tooling: Focus on developer workflows"
+  - "Productivity: Focus on insights and efficiency"
+  - "DevOps: Focus on infrastructure and deployment"

@@ -1,0 +1,124 @@
+---
+name: {{ skill_name }}
+version: {{ version }}
+description: {{ description }}
+author: {{ author }}
+---
+
+# {{ skill_title }}
+
+## Overview
+
+{{ detailed_description }}
+
+## When to Use This Skill
+
+**Trigger Phrases:**
+{% for phrase in trigger_phrases -%}
+- "{{ phrase }}"
+{% endfor %}
+**Use Cases:**
+{% for use_case in use_cases -%}
+- {{ use_case }}
+{% endfor %}
+
+## Response Style
+
+- **Characteristic 1**: [TODO: Define first response characteristic]
+- **Characteristic 2**: [TODO: Define second response characteristic]
+- **Characteristic 3**: [TODO: Define third response characteristic]
+
+{% if has_modes %}
+## Quick Decision Matrix
+
+```
+User Request                → Mode          → Action
+───────────────────────────────────────────────────────────
+{% for mode in modes -%}
+"{{ mode.trigger }}"        → {{ mode.name }}  → {{ mode.action }}
+{% endfor -%}
+```
+
+## Mode Detection Logic
+
+```javascript
+{% for mode in modes -%}
+// Mode {{ loop.index }}: {{ mode.name }}
+if (userMentions("{{ mode.keyword }}")) {
+  return "{{ mode.name|lower|replace(' ', '-') }}";
+}
+
+{% endfor -%}
+// Ambiguous - ask user
+return askForClarification();
+```
+
+{% endif %}
+## Core Responsibilities
+
+### 1. [First Responsibility]
+- ✓ [Detail 1]
+- ✓ [Detail 2]
+- ✓ [Detail 3]
+
+### 2. [Second Responsibility]
+- ✓ [Detail 1]
+- ✓ [Detail 2]
+
+## Workflow
+
+{% if has_phases %}
+{% for phase in phases %}
+### Phase {{ loop.index }}: {{ phase.name }}
+{% for step in phase.steps -%}
+{{ loop.index }}. {{ step }}
+{% endfor %}
+{% endfor %}
+{% else %}
+### Phase 1: Initial Assessment
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+### Phase 2: Main Operation
+1. [Step 1]
+2. [Step 2]
+
+### Phase 3: Verification
+1. [Step 1]
+2. [Step 2]
+{% endif %}
+
+## Error Handling
+
+Common issues and how to handle them:
+- **Error 1**: [Solution]
+- **Error 2**: [Solution]
+
+## Success Criteria
+
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+- [ ] [Criterion 3]
+
+{% if has_reference_materials %}
+## Reference Materials
+
+See additional documentation in:
+{% if has_data_dir -%}
+- `data/` - Best practices and standards
+{% endif -%}
+{% if has_modes_dir -%}
+- `modes/` - Detailed mode workflows
+{% endif -%}
+{% if has_examples_dir -%}
+- `examples/` - Sample outputs
+{% endif -%}
+{% if has_templates_dir -%}
+- `templates/` - Reusable templates
+{% endif -%}
+{% endif %}
+
+---
+
+**Remember:** [TODO: Add key reminder about using this skill effectively]

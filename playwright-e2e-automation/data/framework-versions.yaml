@@ -1,0 +1,303 @@
+# Framework Version Compatibility Database
+# Used for version-aware template selection and configuration generation
+
+# This file maps framework versions to their syntax, configuration requirements,
+# and breaking changes. When the skill detects installed package versions, it
+# consults this database to select appropriate templates and warn about issues.
+
+# ========== TAILWIND CSS ==========
+tailwindcss:
+  v3:
+    version_range: ">=3.0.0 <4.0.0"
+    detection_priority: 2
+
+    syntax:
+      css_directives:
+        - "@tailwind base;"
+        - "@tailwind components;"
+        - "@tailwind utilities;"
+      postcss_plugin: "tailwindcss"
+      config_file: "tailwind.config.js"
+
+    templates:
+      css: "templates/css/tailwind-v3.css"
+      postcss_config: "templates/configs/postcss-tailwind-v3.js"
+      tailwind_config: "templates/configs/tailwind-v3.config.js"
+
+    notes: "Stable version with @tailwind directive syntax"
+
+  v4:
+    version_range: ">=4.0.0"
+    detection_priority: 1  # Check first (latest)
+
+    syntax:
+      css_directives:
+        - "@import \"tailwindcss\";"
+      postcss_plugin: "@tailwindcss/postcss"
+      config_file: "tailwind.config.ts"  # Now TypeScript by default
+
+    templates:
+      css: "templates/css/tailwind-v4.css"
+      postcss_config: "templates/configs/postcss-tailwind-v4.js"
+      tailwind_config: "templates/configs/tailwind-v4.config.ts"
+
+    breaking_changes:
+      - "CSS syntax changed from @tailwind directives to @import"
+      - "PostCSS plugin renamed from 'tailwindcss' to '@tailwindcss/postcss'"
+      - "Configuration file now TypeScript by default"
+      - "Some utility classes restructured (check migration guide)"
+
+    migration_guide: "https://tailwindcss.com/docs/upgrade-guide"
+
+    notes: "Major rewrite with new @import syntax and improved PostCSS integration"
+
+# ========== REACT ==========
+react:
+  v17:
+    version_range: ">=17.0.0 <18.0.0"
+    detection_priority: 2
+
+    features:
+      jsx_transform: "classic"  # Requires React import
+      concurrent_features: false
+      automatic_batching: false
+
+    templates:
+      component: "templates/react/component-v17.tsx"
+
+    notes: "Classic JSX transform, requires 'import React from react'"
+
+  v18:
+    version_range: ">=18.0.0 <19.0.0"
+    detection_priority: 1
+
+    features:
+      jsx_transform: "automatic"  # No React import needed
+      concurrent_features: true
+      automatic_batching: true
+      use_client_directive: false  # Not yet (that's React 19)
+
+    templates:
+      component: "templates/react/component-v18.tsx"
+
+    breaking_changes:
+      - "Automatic batching may affect state update timing"
+      - "Concurrent features require opt-in (via createRoot)"
+      - "IE11 no longer supported"
+
+    migration_guide: "https://react.dev/blog/2022/03/08/react-18-upgrade-guide"
+
+    notes: "New JSX transform, concurrent features, automatic batching"
+
+  v19:
+    version_range: ">=19.0.0"
+    detection_priority: 1
+
+    features:
+      jsx_transform: "automatic"
+      concurrent_features: true
+      automatic_batching: true
+      use_client_directive: true  # Server Components
+      actions: true  # Server Actions
+
+    templates:
+      component: "templates/react/component-v19.tsx"
+
+    breaking_changes:
+      - "'use client' directive required for client components in RSC apps"
+      - "ref is now a regular prop (no forwardRef needed)"
+      - "Context.Provider shorthand removed (use <Context> directly)"
+
+    migration_guide: "https://react.dev/blog/2024/04/25/react-19-upgrade-guide"
+
+    notes: "Server Components, Actions, ref as prop, improved performance"
+
+# ========== NEXT.JS ==========
+nextjs:
+  v13:
+    version_range: ">=13.0.0 <14.0.0"
+    detection_priority: 2
+
+    features:
+      app_router: true  # Optional
+      pages_router: true
+      turbopack: "beta"
+      server_actions: "alpha"
+
+    router_detection:
+      app_router: "app/ directory exists"
+      pages_router: "pages/ directory exists"
+
+    templates:
+      config: "templates/nextjs/next-v13.config.js"
+      page_app: "templates/nextjs/page-v13-app.tsx"
+      page_pages: "templates/nextjs/page-v13-pages.tsx"
+
+    notes: "App Router introduced alongside Pages Router"
+
+  v14:
+    version_range: ">=14.0.0 <15.0.0"
+    detection_priority: 1
+
+    features:
+      app_router: true
+      pages_router: true
+      turbopack: "stable"
+      server_actions: "stable"
+      partial_prerendering: "experimental"
+
+    router_detection:
+      app_router: "app/ directory exists"
+      pages_router: "pages/ directory exists"
+
+    templates:
+      config: "templates/nextjs/next-v14.config.js"
+      page_app: "templates/nextjs/page-v14-app.tsx"
+      page_pages: "templates/nextjs/page-v14-pages.tsx"
+
+    breaking_changes:
+      - "Server Actions stable (syntax changes from v13)"
+      - "Turbopack stable for dev (replaces webpack in dev mode)"
+      - "Minimum Node.js version: 18.17"
+
+    migration_guide: "https://nextjs.org/docs/app/building-your-application/upgrading/version-14"
+
+    notes: "Stable Server Actions and Turbopack"
+
+# ========== VITE ==========
+vite:
+  v4:
+    version_range: ">=4.0.0 <5.0.0"
+    detection_priority: 2
+
+    features:
+      default_port: 5173
+      rollup_version: 3
+      css_code_split: true
+
+    templates:
+      config: "templates/vite/vite-v4.config.ts"
+
+    notes: "Stable Vite 4 with Rollup 3"
+
+  v5:
+    version_range: ">=5.0.0 <6.0.0"
+    detection_priority: 1
+
+    features:
+      default_port: 5173
+      rollup_version: 4
+      css_code_split: true
+      improved_hmr: true
+
+    templates:
+      config: "templates/vite/vite-v5.config.ts"
+
+    breaking_changes:
+      - "Rollup 4 (plugin compatibility check needed)"
+      - "Minimum Node.js version: 18.0"
+      - "Some deprecated options removed"
+
+    migration_guide: "https://vitejs.dev/guide/migration"
+
+    notes: "Vite 5 with Rollup 4 and improved HMR"
+
+# ========== PLAYWRIGHT ==========
+playwright:
+  v1_40_plus:
+    version_range: ">=1.40.0"
+    detection_priority: 1
+
+    features:
+      component_testing: true
+      trace_viewer: true
+      codegen: true
+      auto_waiting: true
+
+    templates:
+      config: "templates/playwright.config.template.ts"
+      test_spec: "templates/test-spec.template.ts"
+      page_object: "templates/page-object.template.ts"
+
+    notes: "Modern Playwright with full feature set"
+
+# ========== POSTCSS ==========
+postcss:
+  v8:
+    version_range: ">=8.0.0"
+    detection_priority: 1
+
+    notes: "Standard PostCSS v8 - most common version"
+
+# ========== VERSION DETECTION STRATEGIES ==========
+detection_strategies:
+  priority_order:
+    description: "Check versions in priority order (higher priority first)"
+    example: "For Tailwind: check v4 rules before v3 rules"
+
+  semver_matching:
+    description: "Use semver.satisfies() for version range matching"
+    library: "semver npm package"
+
+  fallback:
+    description: "If no version matches, warn and use sensible defaults"
+    default_strategy: "Use latest stable templates with warning"
+
+  multi_framework:
+    description: "Detect multiple frameworks simultaneously"
+    example: "React 18 + Vite 5 + Tailwind 4 + Playwright 1.40"
+
+# ========== COMMON BREAKING CHANGE PATTERNS ==========
+breaking_change_categories:
+  syntax_changes:
+    examples:
+      - "Tailwind v3→v4: @tailwind → @import"
+      - "React v17→v18: Optional JSX import"
+    impact: "Critical - app won't build/run"
+    detection: "Parse error, syntax error in build output"
+
+  configuration_changes:
+    examples:
+      - "Tailwind v4: PostCSS plugin rename"
+      - "Next.js v14: next.config.js options"
+    impact: "High - build fails or misconfigured"
+    detection: "Build error, plugin not found"
+
+  api_changes:
+    examples:
+      - "React v19: ref as prop"
+      - "Next.js v13: getServerSideProps in App Router"
+    impact: "Medium - runtime errors or warnings"
+    detection: "TypeScript errors, runtime warnings"
+
+  deprecation_warnings:
+    examples:
+      - "React v18: ReactDOM.render → createRoot"
+      - "Vite: Legacy options removed"
+    impact: "Low - works but will break in future"
+    detection: "Console warnings, deprecation notices"
+
+# ========== USAGE NOTES ==========
+usage:
+  detection_flow:
+    - "Read package.json dependencies and devDependencies"
+    - "For each framework, iterate through versions in priority order"
+    - "Use semver.satisfies(installedVersion, versionRange)"
+    - "First match wins (highest priority)"
+    - "If no match, use fallback and warn"
+
+  template_selection:
+    - "Based on detected version, select appropriate template files"
+    - "Templates use version-specific syntax and best practices"
+    - "Combine multiple framework templates (e.g., React + Tailwind + Vite)"
+
+  error_prevention:
+    - "Check for known breaking changes before generating config"
+    - "Warn user if mixing incompatible versions"
+    - "Provide migration guides for major version differences"
+
+  maintenance:
+    - "Add new versions as they're released"
+    - "Update breaking_changes based on real-world issues"
+    - "Keep migration_guide links current"
+    - "Test template compatibility regularly"

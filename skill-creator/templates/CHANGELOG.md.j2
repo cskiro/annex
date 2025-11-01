@@ -1,0 +1,26 @@
+# Changelog
+
+All notable changes to the {{ skill_name }} skill will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [{{ version }}] - {{ date }}
+
+### Added
+- Initial release of {{ skill_name }}
+{% for feature in initial_features -%}
+- {{ feature }}
+{% endfor %}
+
+### Features
+{% for feature in key_features -%}
+- **{{ feature.name }}**: {{ feature.description }}
+{% endfor %}
+
+### Status
+- Proof of concept
+- Tested locally on 1-2 projects
+- Ready for community feedback and testing
+
+[{{ version }}]: https://github.com/cskiro/claudex/releases/tag/{{ skill_name }}@{{ version }}
