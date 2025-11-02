@@ -1,0 +1,26 @@
+{
+  "name": "tdd-automation",
+  "version": "0.2.0",
+  "description": "Automated TDD enforcement for LLM-assisted development with comprehensive safety features",
+  "author": "Pattern Suggestion Pipeline",
+  "components": {
+    "agents": [
+      {
+        "name": "tdd-automation",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "productivity",
+    "status": "stable",
+    "tags": [
+      "tdd",
+      "testing",
+      "automation",
+      "best-practice",
+      "pattern-generated",
+      "workflow"
+    ]
+  }
+}
