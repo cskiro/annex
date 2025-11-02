@@ -2,8 +2,8 @@
 """
 Marketplace Validation Script for claudex
 
-Validates the marketplace.json file and plugin integrity for Claude Code plugin marketplace.
-Ensures all required fields are present, plugins are correctly structured, and references are valid.
+Validates the marketplace.json file and skill integrity for Claude Code plugin marketplace.
+Follows Anthropic's official schema from anthropics/skills repository.
 
 Usage:
     python3 .claude-plugin/validate-marketplace.py
@@ -16,7 +16,7 @@ Exit Codes:
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Set
 
 # ANSI color codes for terminal output
 class Colors:
@@ -37,7 +37,7 @@ class MarketplaceValidator:
 
     def validate(self) -> bool:
         """Run all validations and return True if successful."""
-        print(f"{Colors.BOLD}🔍 Validating claudex marketplace...{Colors.RESET}\n")
+        print(f"{Colors.BOLD}🔍 Validating claudex marketplace (Anthropic schema)...{Colors.RESET}\n")
 
         # Check marketplace.json exists
         if not self.marketplace_path.exists():
@@ -52,11 +52,12 @@ class MarketplaceValidator:
             self.errors.append(f"Invalid JSON in marketplace.json: {e}")
             return False
 
-        # Run validation checks
+        # Run validation checks (Anthropic schema)
         self._validate_marketplace_structure()
-        self._validate_marketplace_metadata()
+        self._validate_owner()
+        self._validate_metadata()
         self._validate_plugins()
-        self._validate_plugin_files()
+        self._validate_skill_references()
         self._validate_skill_files()
 
         # Print results
@@ -65,38 +66,57 @@ class MarketplaceValidator:
         return len(self.errors) == 0
 
     def _validate_marketplace_structure(self):
-        """Validate required top-level fields."""
-        required_fields = ['name', 'owner', 'plugins']
+        """Validate required top-level fields per Anthropic schema."""
+        required_fields = ['name', 'owner', 'metadata', 'plugins']
 
         for field in required_fields:
             if field not in self.marketplace:
                 self.errors.append(f"Missing required field: '{field}'")
 
-        # Validate owner structure
-        if 'owner' in self.marketplace:
-            if not isinstance(self.marketplace['owner'], dict):
-                self.errors.append("'owner' must be an object")
-            elif 'name' not in self.marketplace['owner']:
-                self.errors.append("'owner.name' is required")
+    def _validate_owner(self):
+        """Validate owner structure per Anthropic schema."""
+        if 'owner' not in self.marketplace:
+            return
 
-    def _validate_marketplace_metadata(self):
-        """Validate metadata fields."""
-        if 'metadata' in self.marketplace:
-            metadata = self.marketplace['metadata']
+        owner = self.marketplace['owner']
 
-            if 'description' not in metadata:
-                self.warnings.append("metadata.description is recommended")
+        if not isinstance(owner, dict):
+            self.errors.append("'owner' must be an object")
+            return
 
-            if 'version' not in metadata:
-                self.warnings.append("metadata.version is recommended")
-            else:
-                # Validate semantic versioning format
-                version = metadata['version']
-                if not self._is_valid_semver(version):
-                    self.warnings.append(f"Version '{version}' doesn't follow semantic versioning (e.g., 1.0.0-beta)")
+        # Required fields per Anthropic schema
+        if 'name' not in owner:
+            self.errors.append("'owner.name' is required")
+
+        # Email is required in Anthropic schema
+        if 'email' not in owner:
+            self.warnings.append("'owner.email' is recommended (required in Anthropic schema)")
+
+    def _validate_metadata(self):
+        """Validate metadata structure per Anthropic schema."""
+        if 'metadata' not in self.marketplace:
+            self.warnings.append("'metadata' is recommended")
+            return
+
+        metadata = self.marketplace['metadata']
+
+        if not isinstance(metadata, dict):
+            self.errors.append("'metadata' must be an object")
+            return
+
+        # Recommended fields per Anthropic schema
+        if 'description' not in metadata:
+            self.warnings.append("'metadata.description' is recommended")
+
+        if 'version' not in metadata:
+            self.warnings.append("'metadata.version' is recommended")
+        else:
+            version = metadata['version']
+            if not self._is_valid_semver(version):
+                self.warnings.append(f"Version '{version}' doesn't follow semantic versioning (e.g., 1.0.0)")
 
     def _validate_plugins(self):
-        """Validate plugin entries."""
+        """Validate plugin entries per Anthropic schema."""
         if 'plugins' not in self.marketplace:
             return
 
@@ -108,144 +128,137 @@ class MarketplaceValidator:
 
         if len(plugins) == 0:
             self.warnings.append("No plugins defined in marketplace")
+            return
 
-        plugin_names = set()
+        plugin_names: Set[str] = set()
 
         for idx, plugin in enumerate(plugins):
             self._validate_plugin_entry(plugin, idx, plugin_names)
 
-    def _validate_plugin_entry(self, plugin: Dict, idx: int, plugin_names: set):
-        """Validate a single plugin entry."""
-        # Check required fields
-        if 'name' not in plugin:
-            self.errors.append(f"Plugin #{idx}: Missing required field 'name'")
-            return
+    def _validate_plugin_entry(self, plugin: Dict, idx: int, plugin_names: Set[str]):
+        """Validate a single plugin entry per Anthropic schema."""
+        # Check required fields per Anthropic schema
+        required_fields = ['name', 'description', 'source', 'strict', 'skills']
 
-        name = plugin['name']
+        plugin_name = plugin.get('name', f'Plugin #{idx}')
+
+        for field in required_fields:
+            if field not in plugin:
+                self.errors.append(f"Plugin '{plugin_name}': Missing required field '{field}'")
 
         # Check for duplicate names
-        if name in plugin_names:
-            self.errors.append(f"Plugin '{name}': Duplicate plugin name")
-        plugin_names.add(name)
+        if 'name' in plugin:
+            name = plugin['name']
+            if name in plugin_names:
+                self.errors.append(f"Plugin '{name}': Duplicate plugin name")
+            plugin_names.add(name)
 
-        # Check source field
-        if 'source' not in plugin:
-            self.errors.append(f"Plugin '{name}': Missing required field 'source'")
-        else:
+        # Validate source field
+        if 'source' in plugin:
             source = plugin['source']
             if not isinstance(source, str):
-                self.errors.append(f"Plugin '{name}': 'source' must be a string")
+                self.errors.append(f"Plugin '{plugin_name}': 'source' must be a string")
             elif not source.startswith('./'):
-                self.warnings.append(f"Plugin '{name}': Source should be relative path starting with './'")
+                self.warnings.append(f"Plugin '{plugin_name}': Source should start with './' (Anthropic pattern)")
 
-        # Check recommended fields
-        recommended = ['description', 'version', 'author', 'license']
-        for field in recommended:
-            if field not in plugin:
-                self.warnings.append(f"Plugin '{name}': Missing recommended field '{field}'")
+        # Validate strict field (boolean)
+        if 'strict' in plugin:
+            if not isinstance(plugin['strict'], bool):
+                self.errors.append(f"Plugin '{plugin_name}': 'strict' must be a boolean")
 
-        # Validate version format
-        if 'version' in plugin and not self._is_valid_semver(plugin['version']):
-            self.warnings.append(f"Plugin '{name}': Version '{plugin['version']}' doesn't follow semantic versioning")
+        # Validate skills array
+        if 'skills' in plugin:
+            skills = plugin['skills']
+            if not isinstance(skills, list):
+                self.errors.append(f"Plugin '{plugin_name}': 'skills' must be an array")
+            elif len(skills) == 0:
+                self.warnings.append(f"Plugin '{plugin_name}': Empty skills array")
 
-        # Validate keywords (if present)
-        if 'keywords' in plugin:
-            if not isinstance(plugin['keywords'], list):
-                self.errors.append(f"Plugin '{name}': 'keywords' must be an array")
-            elif len(plugin['keywords']) == 0:
-                self.warnings.append(f"Plugin '{name}': Empty keywords array")
-
-    def _validate_plugin_files(self):
-        """Validate that plugin directories and plugin.json files exist."""
+    def _validate_skill_references(self):
+        """Validate that skill paths are correctly formatted."""
         if 'plugins' not in self.marketplace:
             return
 
+        all_skill_paths: Set[str] = set()
+
         for plugin in self.marketplace['plugins']:
-            if 'name' not in plugin or 'source' not in plugin:
+            if 'name' not in plugin or 'skills' not in plugin:
                 continue
 
-            name = plugin['name']
-            source = plugin['source']
+            plugin_name = plugin['name']
+            skills = plugin['skills']
 
-            # Resolve plugin directory path
-            if source.startswith('./'):
-                plugin_dir = self.repo_root / source.lstrip('./')
-            else:
-                plugin_dir = self.repo_root / source
-
-            # Check directory exists
-            if not plugin_dir.exists():
-                self.errors.append(f"Plugin '{name}': Directory not found: {plugin_dir}")
+            if not isinstance(skills, list):
                 continue
 
-            if not plugin_dir.is_dir():
-                self.errors.append(f"Plugin '{name}': Source path is not a directory: {plugin_dir}")
-                continue
+            for skill_path in skills:
+                if not isinstance(skill_path, str):
+                    self.errors.append(f"Plugin '{plugin_name}': Skill path must be a string, got {type(skill_path)}")
+                    continue
 
-            # Check plugin.json exists
-            plugin_json_path = plugin_dir / "plugin.json"
-            if not plugin_json_path.exists():
-                self.errors.append(f"Plugin '{name}': Missing plugin.json at {plugin_json_path}")
-                continue
+                if not skill_path.startswith('./'):
+                    self.warnings.append(f"Plugin '{plugin_name}': Skill path '{skill_path}' should start with './'")
 
-            # Validate plugin.json
-            try:
-                with open(plugin_json_path, 'r') as f:
-                    plugin_manifest = json.load(f)
-
-                # Check name matches
-                if 'name' in plugin_manifest and plugin_manifest['name'] != name:
-                    self.warnings.append(
-                        f"Plugin '{name}': Name mismatch between marketplace.json and plugin.json "
-                        f"(marketplace: '{name}', manifest: '{plugin_manifest['name']}')"
-                    )
-
-                # Validate components structure
-                if 'components' not in plugin_manifest:
-                    self.warnings.append(f"Plugin '{name}': Missing 'components' field in plugin.json")
-                elif 'agents' not in plugin_manifest['components']:
-                    self.warnings.append(f"Plugin '{name}': Missing 'components.agents' field")
-
-            except json.JSONDecodeError as e:
-                self.errors.append(f"Plugin '{name}': Invalid JSON in plugin.json: {e}")
+                # Check for duplicates across all plugins
+                if skill_path in all_skill_paths:
+                    self.warnings.append(f"Skill '{skill_path}' is referenced in multiple plugins")
+                all_skill_paths.add(skill_path)
 
     def _validate_skill_files(self):
-        """Validate that SKILL.md files exist and are referenced correctly."""
+        """Validate that skill directories and SKILL.md files exist."""
         if 'plugins' not in self.marketplace:
             return
 
         for plugin in self.marketplace['plugins']:
-            if 'name' not in plugin or 'source' not in plugin:
+            if 'name' not in plugin or 'skills' not in plugin:
                 continue
 
-            name = plugin['name']
-            source = plugin['source']
+            plugin_name = plugin['name']
+            skills = plugin['skills']
 
-            # Resolve plugin directory path
-            if source.startswith('./'):
-                plugin_dir = self.repo_root / source.lstrip('./')
-            else:
-                plugin_dir = self.repo_root / source
-
-            if not plugin_dir.exists():
+            if not isinstance(skills, list):
                 continue
 
-            # Check SKILL.md exists
-            skill_md_path = plugin_dir / "SKILL.md"
-            if not skill_md_path.exists():
-                self.errors.append(f"Plugin '{name}': Missing SKILL.md at {skill_md_path}")
-                continue
+            for skill_path in skills:
+                if not isinstance(skill_path, str):
+                    continue
 
-            # Validate SKILL.md has content
-            try:
-                with open(skill_md_path, 'r') as f:
-                    content = f.read()
-                    if len(content.strip()) == 0:
-                        self.errors.append(f"Plugin '{name}': SKILL.md is empty")
-                    elif len(content) < 100:
-                        self.warnings.append(f"Plugin '{name}': SKILL.md seems very short ({len(content)} chars)")
-            except Exception as e:
-                self.errors.append(f"Plugin '{name}': Could not read SKILL.md: {e}")
+                # Resolve skill directory path
+                if skill_path.startswith('./'):
+                    skill_dir = self.repo_root / skill_path.lstrip('./')
+                else:
+                    skill_dir = self.repo_root / skill_path
+
+                # Check directory exists
+                if not skill_dir.exists():
+                    self.errors.append(f"Plugin '{plugin_name}': Skill directory not found: {skill_path}")
+                    continue
+
+                if not skill_dir.is_dir():
+                    self.errors.append(f"Plugin '{plugin_name}': Skill path is not a directory: {skill_path}")
+                    continue
+
+                # Check SKILL.md exists (Anthropic pattern - NO plugin.json)
+                skill_md_path = skill_dir / "SKILL.md"
+                if not skill_md_path.exists():
+                    self.errors.append(f"Plugin '{plugin_name}': Missing SKILL.md at {skill_path}/SKILL.md")
+                    continue
+
+                # Validate SKILL.md has content
+                try:
+                    with open(skill_md_path, 'r') as f:
+                        content = f.read()
+                        if len(content.strip()) == 0:
+                            self.errors.append(f"Plugin '{plugin_name}': SKILL.md is empty in {skill_path}")
+                        elif len(content) < 100:
+                            self.warnings.append(f"Plugin '{plugin_name}': SKILL.md seems very short in {skill_path} ({len(content)} chars)")
+                except Exception as e:
+                    self.errors.append(f"Plugin '{plugin_name}': Could not read SKILL.md in {skill_path}: {e}")
+
+                # Warn if plugin.json exists (not part of Anthropic pattern)
+                plugin_json_path = skill_dir / "plugin.json"
+                if plugin_json_path.exists():
+                    self.warnings.append(f"Skill '{skill_path}': Contains plugin.json (not required in Anthropic schema, marketplace.json is single source of truth)")
 
     def _is_valid_semver(self, version: str) -> bool:
         """Check if version follows semantic versioning format."""
@@ -279,9 +292,17 @@ class MarketplaceValidator:
         # Final summary
         if len(self.errors) == 0:
             plugin_count = len(self.marketplace.get('plugins', []))
+
+            # Count total skills
+            total_skills = 0
+            for plugin in self.marketplace.get('plugins', []):
+                if 'skills' in plugin and isinstance(plugin['skills'], list):
+                    total_skills += len(plugin['skills'])
+
             print(f"{Colors.GREEN}{Colors.BOLD}✅ Validation passed!{Colors.RESET}")
             print(f"   Marketplace: {self.marketplace.get('name', 'unknown')}")
-            print(f"   Plugins: {plugin_count}")
+            print(f"   Plugin groups: {plugin_count}")
+            print(f"   Total skills: {total_skills}")
             print(f"   Warnings: {len(self.warnings)}")
             print()
         else:

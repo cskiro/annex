@@ -1,134 +1,56 @@
 {
   "name": "claudex",
-  "metadata": {
-    "description": "Curated collection of production-ready skills for Claude Code - auditing, validation, and conversation analysis",
-    "version": "2.0.0-beta",
-    "homepage": "https://github.com/cskiro/claudex",
-    "pluginRoot": "./"
-  },
   "owner": {
     "name": "Connor",
-    "url": "https://github.com/cskiro"
+    "email": "noreply@claudex.dev"
+  },
+  "metadata": {
+    "description": "Production-ready skills for Claude Code - code quality analysis, testing automation, productivity tools, and DevOps workflows",
+    "version": "0.2.0",
+    "homepage": "https://github.com/cskiro/claudex"
   },
   "plugins": [
     {
-      "name": "codebase-auditor",
-      "source": "./codebase-auditor",
-      "description": "Comprehensive static analysis tool that audits codebases for quality, security, and technical debt based on 2024-25 SDLC best practices",
-      "version": "1.0.0-beta",
-      "author": "Connor",
-      "license": "Apache-2.0",
-      "keywords": [
-        "audit",
-        "code-quality",
-        "security",
-        "testing",
-        "technical-debt",
-        "owasp",
-        "wcag",
-        "dora"
-      ],
-      "category": "analysis",
-      "homepage": "https://github.com/cskiro/claudex/tree/main/codebase-auditor"
+      "name": "analysis-tools",
+      "description": "Code quality, security, and architecture analysis tools for comprehensive codebase auditing",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./codebase-auditor",
+        "./bulletproof-react-auditor",
+        "./claude-md-auditor"
+      ]
     },
     {
-      "name": "bulletproof-react-auditor",
-      "source": "./bulletproof-react-auditor",
-      "description": "React application auditor based on Bulletproof React architecture guide - evaluates React projects against production-ready standards",
-      "version": "1.0.0-beta",
-      "author": "Connor",
-      "license": "Apache-2.0",
-      "keywords": [
-        "react",
-        "typescript",
-        "architecture",
-        "best-practices",
-        "bulletproof-react",
-        "component-patterns",
-        "state-management"
-      ],
-      "category": "analysis",
-      "homepage": "https://github.com/cskiro/claudex/tree/main/bulletproof-react-auditor"
+      "name": "productivity-tools",
+      "description": "Development workflow automation, insights, and skill creation tools",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./cc-insights",
+        "./git-worktree-setup",
+        "./skill-creator",
+        "./tdd-automation"
+      ]
     },
     {
-      "name": "claude-md-auditor",
-      "source": "./claude-md-auditor",
-      "description": "Validates and audits CLAUDE.md configuration files for Claude Code - ensures compliance with schema standards and best practices for LLM configuration",
-      "version": "1.0.0-beta",
-      "author": "Connor",
-      "license": "Apache-2.0",
-      "keywords": [
-        "configuration",
-        "validation",
-        "claude-md",
-        "schema",
-        "best-practices",
-        "llm-config"
-      ],
-      "category": "tooling",
-      "homepage": "https://github.com/cskiro/claudex/tree/main/claude-md-auditor"
+      "name": "testing-tools",
+      "description": "Automated testing frameworks and quality assurance tooling",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./playwright-e2e-automation",
+        "./skill-isolation-tester"
+      ]
     },
     {
-      "name": "cc-insights",
-      "source": "./cc-insights",
-      "description": "RAG-powered conversation analysis and semantic search - automatically processes Claude Code conversation history and generates intelligent insight reports",
-      "version": "2.0.0-beta",
-      "author": "Connor",
-      "license": "Apache-2.0",
-      "keywords": [
-        "rag",
-        "semantic-search",
-        "analytics",
-        "insights",
-        "conversation-analysis",
-        "pattern-detection",
-        "chromadb"
-      ],
-      "category": "productivity",
-      "homepage": "https://github.com/cskiro/claudex/tree/main/cc-insights"
-    },
-    {
-      "name": "playwright-e2e-automation",
-      "source": "./playwright-e2e-automation",
-      "description": "Automated Playwright e2e testing framework with LLM-powered visual debugging, screenshot analysis, regression testing, and framework version detection",
-      "version": "0.2.0",
-      "author": "Connor",
-      "license": "Apache-2.0",
-      "keywords": [
-        "playwright",
-        "e2e-testing",
-        "visual-regression",
-        "screenshot-analysis",
-        "automated-testing",
-        "llm-debugging",
-        "testing",
-        "automation",
-        "accessibility"
-      ],
-      "category": "tooling",
-      "homepage": "https://github.com/cskiro/claudex/tree/main/playwright-e2e-automation"
-    },
-    {
-      "name": "skill-creator",
-      "source": "./skill-creator",
-      "description": "Automated skill generation tool that creates production-ready Claude Code skills following Claudex marketplace standards with intelligent templates, pattern detection, and quality validation",
-      "version": "0.1.0",
-      "author": "Connor",
-      "license": "Apache-2.0",
-      "keywords": [
-        "skill",
-        "generator",
-        "scaffolding",
-        "template",
-        "automation",
-        "marketplace",
-        "claudex",
-        "skill-creation",
-        "developer-tools",
-        "productivity"
-      ],
-      "category": "productivity",
-      "homepage": "https://github.com/cskiro/claudex/tree/main/skill-creator"
+      "name": "devops-tools",
+      "description": "Infrastructure automation and monitoring setup",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./otel-monitoring-setup"
+      ]
     }
   ]
 }
