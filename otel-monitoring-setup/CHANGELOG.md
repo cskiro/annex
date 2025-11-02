@@ -5,6 +5,23 @@ All notable changes to the otel-monitoring-setup skill will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-11-02
+
+### Added
+- **Cleanup Script** (`templates/cleanup-telemetry.sh`) - Full cleanup utility that removes all containers, volumes, and data with confirmation prompt
+- **Disk Space Documentation** - Added minimum 2GB free disk space requirement to prerequisites
+
+### Changed
+- **Loki Service** - Enabled Loki log storage by default (was previously commented out)
+- **Docker Image Versions** - Pinned specific versions for stability:
+  - OTEL Collector: `0.115.1`
+  - Prometheus: `v2.55.1`
+  - Grafana: `11.3.0`
+  - Loki: `3.0.0`
+
+### Fixed
+- **Docker Compose** - Removed outdated comment about Loki exporter limitations now that Loki is fully integrated
+
 ## [1.0.1] - 2025-11-01
 
 ### Fixed
