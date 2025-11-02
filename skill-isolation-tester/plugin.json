@@ -1,0 +1,45 @@
+{
+  "name": "skill-isolation-tester",
+  "version": "0.1.0",
+  "description": "Automated testing framework for Claude Code skills using multiple isolation environments (git worktree, Docker containers, VMs) to validate behavior before public release. Includes production-ready test templates, shell validation, retry logic, and automatic cleanup.",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/skill-isolation-tester",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "testing",
+    "isolation",
+    "docker",
+    "validation",
+    "quality-assurance",
+    "skill-testing",
+    "worktree",
+    "vm",
+    "test-automation",
+    "developer-tools",
+    "ci-cd",
+    "portability",
+    "cleanup",
+    "security"
+  ],
+  "requirements": {
+    "docker": ">=20.10.0",
+    "bash": ">=4.0"
+  },
+  "components": {
+    "agents": [
+      {
+        "name": "skill-isolation-tester",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "quality-assurance",
+    "status": "production-ready",
+    "tested": "Successfully validated claude-code-otel-setup skill with A- grade"
+  }
+}

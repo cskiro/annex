@@ -1,6 +1,6 @@
 ---
 name: otel-monitoring-setup
-version: 0.1.0
+version: 0.2.0
 description: Automated OpenTelemetry setup for Claude Code with local PoC mode (full Docker stack with Grafana dashboards) and enterprise mode (connect to centralized infrastructure). Configures telemetry collection, verifies data flow, handles dashboard imports with datasource UID detection, and supports team rollout scenarios. Use for any OpenTelemetry setup task - local development, enterprise deployment, or team aggregation.
 author: Connor
 ---
@@ -54,6 +54,7 @@ Automated workflow for setting up OpenTelemetry telemetry collection for Claude 
 - Docker Desktop installed and running
 - Claude Code installed
 - Write access to ~/.claude/settings.json
+- Minimum 2GB free disk space (for Docker images and data volumes)
 
 **High-Level Process:**
 1. Verify Docker is running
