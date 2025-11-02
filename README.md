@@ -75,6 +75,7 @@ Then browse and install skills:
 /plugin install playwright-e2e-automation@claudex
 /plugin install skill-creator@claudex
 /plugin install skill-isolation-tester@claudex
+/plugin install tdd-automation@claudex
 ```
 
 ### Option 2: Team Configuration (Auto-Install)
@@ -100,7 +101,8 @@ Add to your project's `.claude/settings.json` for automatic setup:
     "git-worktree-setup@claudex",
     "playwright-e2e-automation@claudex",
     "skill-creator@claudex",
-    "skill-isolation-tester@claudex"
+    "skill-isolation-tester@claudex",
+    "tdd-automation@claudex"
   ]
 }
 ```
@@ -122,6 +124,7 @@ When team members trust your repository, these plugins install automatically.
 | **[playwright-e2e-automation](./playwright-e2e-automation/)** | Automated Playwright e2e testing framework with LLM-powered visual debugging, screenshot analysis, and regression testing. Zero-setup automation for React/Vite, Node.js, and full-stack apps. | `0.2.0` | Tooling |
 | **[skill-creator](./skill-creator/)** | Automated skill generation tool that creates production-ready Claude Code skills following Claudex marketplace standards with intelligent templates and quality validation. | `0.1.0` | Productivity |
 | **[skill-isolation-tester](./skill-isolation-tester/)** | Automated testing framework for Claude Code skills using multiple isolation environments (git worktree, Docker, VMs) to validate behavior before public release. | `0.1.0` | Quality Assurance |
+| **[tdd-automation](./tdd-automation/)** | Automated TDD enforcement for LLM-assisted development. Installs infrastructure that makes Claude Code automatically follow red-green-refactor workflow without manual intervention. | `0.2.0` | Productivity |
 
 **Most skills are at version 0.1.0-0.2.0 (proof of concept)**. Production-ready versions will follow semantic versioning with git tags after successful merges to main.
 
@@ -139,6 +142,6 @@ When team members trust your repository, these plugins install automatically.
 
 **Status**: Beta - All skills tested locally on 1-2 projects
 
-**Last Updated**: 2025-11-01
+**Last Updated**: 2025-11-02
 
 *Experimental skills for extending Claude Code capabilities. Versioning via git tags follows successful merges to main.*
