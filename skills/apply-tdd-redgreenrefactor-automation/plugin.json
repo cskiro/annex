@@ -1,0 +1,19 @@
+{
+  "name": "apply-tdd-redgreenrefactor-automation",
+  "version": "0.1.0",
+  "description": "Automated best practice: Apply TDD red-green-refactor cycle",
+  "author": "Pattern Suggestion Pipeline",
+  "components": {
+    "agents": [
+      {
+        "name": "apply-tdd-redgreenrefactor-automation",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "productivity",
+    "status": "proof-of-concept",
+    "tags": ["general", "automation", "best-practice", "pattern-generated"]
+  }
+}
