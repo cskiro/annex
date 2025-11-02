@@ -76,6 +76,8 @@ Then browse and install skills:
 /plugin install skill-creator@claudex
 /plugin install skill-isolation-tester@claudex
 /plugin install tdd-automation@claudex
+/plugin install sub-agent-creator@claudex
+/plugin install mcp-server-creator@claudex
 ```
 
 ### Option 2: Team Configuration (Auto-Install)
@@ -102,7 +104,9 @@ Add to your project's `.claude/settings.json` for automatic setup:
     "playwright-e2e-automation@claudex",
     "skill-creator@claudex",
     "skill-isolation-tester@claudex",
-    "tdd-automation@claudex"
+    "tdd-automation@claudex",
+    "sub-agent-creator@claudex",
+    "mcp-server-creator@claudex"
   ]
 }
 ```
@@ -125,6 +129,8 @@ When team members trust your repository, these plugins install automatically.
 | **[skill-creator](./skill-creator/)** | Automated skill generation tool that creates production-ready Claude Code skills following Claudex marketplace standards with intelligent templates and quality validation. | `0.1.0` | Productivity |
 | **[skill-isolation-tester](./skill-isolation-tester/)** | Automated testing framework for Claude Code skills using multiple isolation environments (git worktree, Docker, VMs) to validate behavior before public release. | `0.1.0` | Quality Assurance |
 | **[tdd-automation](./tdd-automation/)** | Automated TDD enforcement for LLM-assisted development. Installs infrastructure that makes Claude Code automatically follow red-green-refactor workflow without manual intervention. | `0.2.0` | Productivity |
+| **[sub-agent-creator](./sub-agent-creator/)** | Automates creation of Claude Code sub-agents following Anthropic's official patterns, with proper frontmatter, tool configuration, and system prompts. | `0.1.0` | Tooling |
+| **[mcp-server-creator](./mcp-server-creator/)** | Automated MCP server creation tool that generates production-ready Model Context Protocol servers with TypeScript/Python SDKs, configuration templates, and Claude Desktop integration. | `0.1.0` | Tooling |
 
 **Most skills are at version 0.1.0-0.2.0 (proof of concept)**. Production-ready versions will follow semantic versioning with git tags after successful merges to main.
 

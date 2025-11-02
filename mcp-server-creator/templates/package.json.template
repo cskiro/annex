@@ -1,0 +1,25 @@
+{
+  "name": "{{SERVER_NAME}}",
+  "version": "1.0.0",
+  "description": "{{SERVER_DESCRIPTION}}",
+  "type": "module",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "watch": "tsc --watch",
+    "start": "node build/index.js",
+    "inspect": "npx @modelcontextprotocol/inspector node build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"{{#EXTRA_DEPS}},
+    {{EXTRA_DEPS}}{{/EXTRA_DEPS}}
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  },
+  "keywords": ["mcp", "model-context-protocol", "{{SERVER_NAME}}"],
+  "author": "{{AUTHOR}}",
+  "license": "MIT"
+}

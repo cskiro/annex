@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""
+{{SERVER_NAME}} MCP Server
+
+{{SERVER_DESCRIPTION}}
+"""
+
+from mcp.server.fastmcp import FastMCP
+import os
+from typing import Optional
+import logging
+
+# Configure logging to stderr (CRITICAL: never log to stdout in STDIO mode)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]  # Writes to stderr by default
+)
+logger = logging.getLogger(__name__)
+
+# Initialize MCP server
+mcp = FastMCP("{{SERVER_NAME}}")
+
+{{#TOOLS}}
+@mcp.tool()
+async def {{TOOL_FUNCTION}}({{TOOL_PARAMS_TYPED}}) -> {{TOOL_RETURN_TYPE}}:
+    """
+    {{TOOL_DESCRIPTION}}
+
+    Args:
+        {{#TOOL_PARAMS}}
+        {{PARAM_NAME}}: {{PARAM_DESCRIPTION}}
+        {{/TOOL_PARAMS}}
+
+    Returns:
+        {{TOOL_RETURN_DESCRIPTION}}
+    """
+    try:
+        logger.info(f"{{TOOL_FUNCTION}} called with: {{TOOL_PARAMS_LOG}}")
+
+        # TODO: Implement your tool logic here
+        result = None  # Replace with actual implementation
+
+        return str(result)
+    except Exception as e:
+        logger.error(f"Error in {{TOOL_FUNCTION}}: {str(e)}")
+        raise
+
+{{/TOOLS}}
+
+{{#HAS_RESOURCES}}
+@mcp.resource("{{RESOURCE_URI_PATTERN}}")
+async def get_resource({{RESOURCE_PARAMS}}) -> str:
+    """
+    {{RESOURCE_DESCRIPTION}}
+
+    Args:
+        {{#RESOURCE_PARAMS_LIST}}
+        {{PARAM_NAME}}: {{PARAM_DESCRIPTION}}
+        {{/RESOURCE_PARAMS_LIST}}
+
+    Returns:
+        Resource content as string
+    """
+    try:
+        logger.info(f"Resource requested: {{RESOURCE_PARAMS_LOG}}")
+
+        # TODO: Implement resource fetching logic
+        content = ""  # Replace with actual implementation
+
+        return content
+    except Exception as e:
+        logger.error(f"Error fetching resource: {str(e)}")
+        raise
+{{/HAS_RESOURCES}}
+
+{{#HAS_PROMPTS}}
+@mcp.prompt()
+async def {{PROMPT_NAME}}({{PROMPT_PARAMS}}) -> str:
+    """
+    {{PROMPT_DESCRIPTION}}
+
+    Args:
+        {{#PROMPT_PARAMS_LIST}}
+        {{PARAM_NAME}}: {{PARAM_DESCRIPTION}}
+        {{/PROMPT_PARAMS_LIST}}
+
+    Returns:
+        Formatted prompt template
+    """
+    return f"""
+{{PROMPT_TEMPLATE}}
+"""
+{{/HAS_PROMPTS}}
+
+if __name__ == "__main__":
+    logger.info("Starting {{SERVER_NAME}} MCP server...")
+    mcp.run()

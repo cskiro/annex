@@ -1,0 +1,168 @@
+# Example Tool Definitions for Common Use Cases
+
+database_query:
+  name: "query_database"
+  description: "Execute a SQL query against the database (read-only)"
+  params:
+    - name: "query"
+      type: "string"
+      description: "SQL query to execute (SELECT only)"
+    - name: "limit"
+      type: "number"
+      description: "Maximum number of rows to return (default: 100)"
+      optional: true
+  returns: "Array of result rows as JSON objects"
+  implementation_notes:
+    - "Validate query is SELECT only (no INSERT/UPDATE/DELETE)"
+    - "Apply row limits to prevent large responses"
+    - "Handle connection errors gracefully"
+    - "Format results as JSON for easy AI parsing"
+
+web_search:
+  name: "search_web"
+  description: "Search the web using a search engine API"
+  params:
+    - name: "query"
+      type: "string"
+      description: "Search query string"
+    - name: "num_results"
+      type: "number"
+      description: "Number of results to return (default: 10)"
+      optional: true
+  returns: "Array of search results with title, URL, and snippet"
+  implementation_notes:
+    - "Use search API (Google Custom Search, Bing, etc.)"
+    - "Cache results to avoid rate limits"
+    - "Return structured data (title, url, description)"
+    - "Handle API errors and quota limits"
+
+file_search:
+  name: "search_files"
+  description: "Search for files matching a pattern or containing text"
+  params:
+    - name: "pattern"
+      type: "string"
+      description: "File pattern (glob) or search term"
+    - name: "directory"
+      type: "string"
+      description: "Directory to search in (default: current)"
+      optional: true
+    - name: "search_content"
+      type: "boolean"
+      description: "Search file contents, not just names (default: false)"
+      optional: true
+  returns: "Array of file paths matching the pattern or containing the text"
+  implementation_notes:
+    - "Validate directory path (prevent path traversal)"
+    - "Respect .gitignore patterns"
+    - "Limit search depth and file count"
+    - "Use efficient search algorithms (ripgrep, etc.)"
+
+send_email:
+  name: "send_email"
+  description: "Send an email message"
+  params:
+    - name: "to"
+      type: "string"
+      description: "Recipient email address"
+    - name: "subject"
+      type: "string"
+      description: "Email subject line"
+    - name: "body"
+      type: "string"
+      description: "Email body (plain text or HTML)"
+    - name: "html"
+      type: "boolean"
+      description: "Whether body is HTML (default: false)"
+      optional: true
+  returns: "Confirmation message with message ID"
+  implementation_notes:
+    - "Validate email addresses"
+    - "Use transactional email service (SendGrid, SES, etc.)"
+    - "Implement rate limiting"
+    - "Log all sent emails"
+    - "Require user approval for sensitive sends"
+
+create_ticket:
+  name: "create_ticket"
+  description: "Create a new issue or ticket in project management system"
+  params:
+    - name: "title"
+      type: "string"
+      description: "Issue title"
+    - name: "description"
+      type: "string"
+      description: "Detailed issue description"
+    - name: "priority"
+      type: "string"
+      description: "Priority level (low, medium, high, critical)"
+      optional: true
+    - name: "assignee"
+      type: "string"
+      description: "Username to assign ticket to"
+      optional: true
+  returns: "Created ticket ID and URL"
+  implementation_notes:
+    - "Integrate with Jira, GitHub Issues, Linear, etc."
+    - "Validate priority values"
+    - "Apply default labels/tags"
+    - "Return link to created ticket"
+
+calculate_metrics:
+  name: "calculate_metrics"
+  description: "Calculate metrics from a dataset"
+  params:
+    - name: "dataset"
+      type: "array"
+      description: "Array of data points"
+    - name: "metrics"
+      type: "array"
+      description: "List of metrics to calculate (mean, median, sum, etc.)"
+  returns: "Object with calculated metric values"
+  implementation_notes:
+    - "Support common statistical operations"
+    - "Handle missing or invalid data"
+    - "Return results in structured format"
+    - "Optimize for large datasets"
+
+format_code:
+  name: "format_code"
+  description: "Format source code using language-specific formatter"
+  params:
+    - name: "code"
+      type: "string"
+      description: "Source code to format"
+    - name: "language"
+      type: "string"
+      description: "Programming language (javascript, python, etc.)"
+    - name: "style"
+      type: "string"
+      description: "Style guide (standard, prettier, black, etc.)"
+      optional: true
+  returns: "Formatted code string"
+  implementation_notes:
+    - "Use language-specific formatters (prettier, black, etc.)"
+    - "Handle syntax errors gracefully"
+    - "Support multiple style configurations"
+    - "Preserve comments and structure"
+
+translate_text:
+  name: "translate_text"
+  description: "Translate text between languages"
+  params:
+    - name: "text"
+      type: "string"
+      description: "Text to translate"
+    - name: "source_lang"
+      type: "string"
+      description: "Source language code (auto-detect if omitted)"
+      optional: true
+    - name: "target_lang"
+      type: "string"
+      description: "Target language code"
+  returns: "Translated text string"
+  implementation_notes:
+    - "Use translation API (Google Translate, DeepL, etc.)"
+    - "Support language auto-detection"
+    - "Handle API rate limits"
+    - "Cache common translations"

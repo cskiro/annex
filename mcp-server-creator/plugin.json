@@ -1,0 +1,37 @@
+{
+  "name": "mcp-server-creator",
+  "version": "0.1.0",
+  "description": "Automated MCP server creation tool that generates production-ready Model Context Protocol servers with TypeScript/Python SDKs, configuration templates, and Claude Desktop integration",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/mcp-server-creator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "server",
+    "automation",
+    "scaffolding",
+    "claude-desktop",
+    "integration",
+    "developer-tools",
+    "productivity"
+  },
+  "requirements": {},
+  "components": {
+    "agents": [
+      {
+        "name": "mcp-server-creator",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "tooling",
+    "status": "proof-of-concept",
+    "tested": "1-2 projects locally"
+  }
+}
