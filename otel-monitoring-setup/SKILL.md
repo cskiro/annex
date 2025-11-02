@@ -54,6 +54,7 @@ Automated workflow for setting up OpenTelemetry telemetry collection for Claude 
 - Docker Desktop installed and running
 - Claude Code installed
 - Write access to ~/.claude/settings.json
+- Minimum 2GB free disk space (for Docker images and data volumes)
 
 **High-Level Process:**
 1. Verify Docker is running

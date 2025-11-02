@@ -1,7 +1,7 @@
 services:
   # OpenTelemetry Collector - receives telemetry from Claude Code
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
+    image: otel/opentelemetry-collector-contrib:0.115.1
     container_name: claude-otel-collector
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
@@ -15,7 +15,7 @@ services:
 
   # Prometheus - stores metrics
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.55.1
     container_name: claude-prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -33,9 +33,21 @@ services:
     depends_on:
       - otel-collector
 
+  # Loki - stores logs
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: claude-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+    networks:
+      - claude-telemetry
+
   # Grafana - visualization dashboards
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:11.3.0
     container_name: claude-grafana
     ports:
       - "3000:3000"
@@ -50,22 +62,7 @@ services:
       - claude-telemetry
     depends_on:
       - prometheus
-
-  # Loki - Optional log storage (commented out by default)
-  # IMPORTANT: The standard OTEL Collector image doesn't support direct export to Loki.
-  # If you need log collection, uncomment this service and use Promtail or Grafana Alloy
-  # as an intermediary to send logs from OTEL Collector to Loki.
-  #
-  # loki:
-  #   image: grafana/loki:latest
-  #   container_name: claude-loki
-  #   ports:
-  #     - "3100:3100"
-  #   command: -config.file=/etc/loki/local-config.yaml
-  #   volumes:
-  #     - loki-data:/loki
-  #   networks:
-  #     - claude-telemetry
+      - loki
 
 networks:
   claude-telemetry:
@@ -73,5 +70,5 @@ networks:
 
 volumes:
   prometheus-data:
+  loki-data:
   grafana-data:
-  # loki-data:  # Uncomment if enabling Loki service above
