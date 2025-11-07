@@ -1,0 +1,36 @@
+{
+  "name": "sub-agent-creator",
+  "version": "0.1.0",
+  "description": "Automates creation of Claude Code sub-agents following Anthropic's official patterns, with proper frontmatter, tool configuration, and system prompts.",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/sub-agent-creator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "sub-agent",
+    "agent",
+    "automation",
+    "scaffolding",
+    "task-delegation",
+    "claude-code",
+    "developer-tools",
+    "productivity"
+  ],
+  "requirements": {},
+  "components": {
+    "agents": [
+      {
+        "name": "sub-agent-creator",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "tooling",
+    "status": "proof-of-concept",
+    "tested": "1-2 projects locally"
+  }
+}

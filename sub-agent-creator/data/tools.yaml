@@ -1,0 +1,192 @@
+# Available Tools for Claude Code Sub-Agents
+# Source: Anthropic official tool catalog
+
+tools:
+  # File Reading Tools
+  Read:
+    category: read_only
+    description: "Read file contents from filesystem"
+    capabilities:
+      - Read any file by absolute path
+      - Support for images, PDFs, notebooks
+      - Line offset and limit for large files
+    security_level: safe
+    common_uses:
+      - Code review
+      - Documentation analysis
+      - Configuration reading
+
+  Grep:
+    category: read_only
+    description: "Search file contents with regex patterns"
+    capabilities:
+      - Full regex syntax support
+      - File filtering by glob or type
+      - Context lines (before/after matches)
+    security_level: safe
+    common_uses:
+      - Finding code patterns
+      - Searching for errors
+      - Locating specific implementations
+
+  Glob:
+    category: read_only
+    description: "Find files by name patterns"
+    capabilities:
+      - Glob pattern matching (*.js, **/*.ts)
+      - Sorted by modification time
+      - Fast file discovery
+    security_level: safe
+    common_uses:
+      - File discovery
+      - Pattern-based file listing
+      - Project structure analysis
+
+  # File Modification Tools
+  Edit:
+    category: write
+    description: "Modify existing files with exact string replacement"
+    capabilities:
+      - Exact string replacement
+      - Replace all occurrences option
+      - Preserves formatting
+    security_level: moderate
+    requires_validation: true
+    common_uses:
+      - Code fixes
+      - Configuration updates
+      - Refactoring
+    warnings:
+      - Can modify source code
+      - Changes are immediate
+      - Requires careful validation
+
+  Write:
+    category: write
+    description: "Create new files or overwrite existing ones"
+    capabilities:
+      - Create new files
+      - Overwrite existing files
+      - Create directory structure
+    security_level: high_risk
+    requires_validation: true
+    common_uses:
+      - Generating new code
+      - Creating configuration files
+      - Writing documentation
+    warnings:
+      - Can overwrite files without backup
+      - Can create files anywhere writable
+      - Needs explicit user approval
+
+  # Execution Tools
+  Bash:
+    category: execution
+    description: "Execute shell commands"
+    capabilities:
+      - Run any shell command
+      - Background execution
+      - Command chaining
+    security_level: critical
+    requires_validation: true
+    common_uses:
+      - Running tests
+      - Git operations
+      - Build commands
+    warnings:
+      - Full system access
+      - Can execute destructive commands
+      - ALWAYS validate before granting
+
+  # Other Tools
+  Task:
+    category: delegation
+    description: "Launch specialized sub-agents"
+    capabilities:
+      - Spawn child agents
+      - Parallel execution
+      - Specialized workflows
+    security_level: moderate
+    common_uses:
+      - Complex multi-step tasks
+      - Parallel operations
+      - Specialized analysis
+
+  WebSearch:
+    category: external
+    description: "Search the web for current information"
+    capabilities:
+      - Web search queries
+      - Domain filtering
+      - Current information access
+    security_level: safe
+    common_uses:
+      - Research
+      - Documentation lookup
+      - Current event information
+
+  WebFetch:
+    category: external
+    description: "Fetch and process web content"
+    capabilities:
+      - URL fetching
+      - HTML to markdown conversion
+      - Content extraction
+    security_level: safe
+    common_uses:
+      - Documentation scraping
+      - Web content analysis
+      - API documentation access
+
+# Tool Categories for Easy Selection
+categories:
+  read_only:
+    tools: [Read, Grep, Glob]
+    description: "Safe for analysis and inspection"
+    security_level: safe
+    recommended_for:
+      - Code reviewers
+      - Analyzers
+      - Auditors
+
+  code_operations:
+    tools: [Read, Edit, Write, Grep, Glob]
+    description: "Can read and modify code"
+    security_level: moderate
+    recommended_for:
+      - Code fixers
+      - Refactoring agents
+      - Code generators
+
+  full_development:
+    tools: [Read, Edit, Write, Bash, Grep, Glob, Task]
+    description: "Complete development capabilities"
+    security_level: high
+    recommended_for:
+      - Full-stack developers
+      - Build automation
+      - Complex workflows
+
+  all_tools:
+    tools: null  # Omit tools field in frontmatter
+    description: "Access to all available tools including MCP"
+    security_level: critical
+    warnings:
+      - Grants access to Write, Edit, Bash
+      - Includes any MCP server tools
+      - Use only when absolutely necessary
+    recommended_for:
+      - General-purpose agents
+      - When requirements are unclear
+      - Rapid prototyping (then restrict later)
+
+# Security Recommendations
+security_guidelines:
+  principle: "Least Privilege - Start minimal, add as needed"
+  default_recommendation: read_only
+  escalation_path:
+    - Start with read_only
+    - Add Edit if modifications needed
+    - Add Write only for new file creation
+    - Add Bash last and with caution
+  review_frequency: "After each test iteration"

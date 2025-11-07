@@ -30,7 +30,9 @@
         "./cc-insights",
         "./git-worktree-setup",
         "./skill-creator",
-        "./tdd-automation"
+        "./tdd-automation",
+        "./sub-agent-creator",
+        "./mcp-server-creator"
       ]
     },
     {

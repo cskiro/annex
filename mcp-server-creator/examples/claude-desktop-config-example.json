@@ -1,0 +1,40 @@
+{
+  "mcpServers": {
+    "weather": {
+      "command": "node",
+      "args": [
+        "/Users/username/projects/mcp-weather-server/build/index.js"
+      ]
+    },
+    "database": {
+      "command": "node",
+      "args": [
+        "/Users/username/projects/mcp-database-server/build/index.js"
+      ],
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/mydb"
+      }
+    },
+    "python-server": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/username/projects/mcp-python-server",
+        "run",
+        "main.py"
+      ],
+      "env": {
+        "API_KEY": "your_api_key_here"
+      }
+    },
+    "filesystem": {
+      "command": "node",
+      "args": [
+        "/Users/username/projects/mcp-filesystem-server/build/index.js"
+      ],
+      "env": {
+        "ALLOWED_DIRECTORIES": "/Users/username/Documents,/Users/username/Projects"
+      }
+    }
+  }
+}

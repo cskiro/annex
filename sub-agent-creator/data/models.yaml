@@ -1,0 +1,59 @@
+# Available Claude Models for Sub-Agents
+# Source: Anthropic official documentation
+
+models:
+  inherit:
+    description: "Use the same model as the main conversation"
+    use_when: "Default choice - ensures consistency across conversation"
+    benefits:
+      - Consistent behavior with main session
+      - No context switching between model capabilities
+      - Automatically upgrades when user upgrades main model
+    recommended: true
+
+  sonnet:
+    full_name: "Claude 3.5 Sonnet"
+    description: "Balanced performance and speed"
+    use_when: "General-purpose sub-agents needing good performance"
+    benefits:
+      - Fast response times
+      - High quality outputs
+      - Cost-effective
+      - Good for most use cases
+    model_id: "claude-sonnet-4-5"
+
+  opus:
+    full_name: "Claude 3 Opus"
+    description: "Maximum capability and reasoning"
+    use_when: "Complex tasks requiring deep analysis"
+    benefits:
+      - Best reasoning capabilities
+      - Handles complex edge cases
+      - Superior quality on difficult tasks
+    trade_offs:
+      - Slower response times
+      - Higher cost
+      - May be overkill for simple tasks
+    model_id: "claude-3-opus"
+
+  haiku:
+    full_name: "Claude 3 Haiku"
+    description: "Fast and economical"
+    use_when: "Simple, repetitive tasks requiring speed"
+    benefits:
+      - Very fast responses
+      - Low cost
+      - Good for high-frequency operations
+    trade_offs:
+      - Lower reasoning capability
+      - May miss nuanced requirements
+      - Not suitable for complex tasks
+    model_id: "claude-3-haiku"
+
+# Selection Guidance
+decision_matrix:
+  default: inherit
+  speed_critical: haiku
+  quality_critical: opus
+  balanced: sonnet
+  team_consistency: inherit

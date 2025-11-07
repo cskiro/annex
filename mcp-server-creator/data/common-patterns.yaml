@@ -1,0 +1,144 @@
+# Common MCP Server Patterns
+
+database_integration:
+  name: "Database Integration"
+  description: "Connect AI to databases (PostgreSQL, MySQL, MongoDB)"
+  typical_tools:
+    - query_database: "Execute SQL queries with safety checks"
+    - get_schema: "Retrieve database schema information"
+    - list_tables: "List all available tables"
+    - describe_table: "Get detailed table structure"
+  typical_resources:
+    - "db://tables/{table}/schema"
+    - "db://tables/{table}/sample-data"
+  dependencies:
+    typescript: ["pg", "mysql2", "mongodb"]
+    python: ["psycopg2", "pymysql", "pymongo"]
+  security_notes:
+    - "Use read-only connections when possible"
+    - "Implement query validation to prevent SQL injection"
+    - "Never expose raw connection strings"
+
+api_wrapper:
+  name: "API Wrapper"
+  description: "Wrap REST APIs for AI consumption"
+  typical_tools:
+    - search_api: "Search endpoint with filters"
+    - get_resource: "Fetch specific resource by ID"
+    - list_resources: "List resources with pagination"
+    - create_resource: "Create new resource (with approval)"
+  typical_resources:
+    - "api://endpoints/{endpoint}"
+    - "api://docs/{path}"
+  dependencies:
+    typescript: ["axios", "node-fetch"]
+    python: ["httpx", "requests"]
+  security_notes:
+    - "Store API keys in environment variables"
+    - "Implement rate limiting"
+    - "Validate all responses"
+
+filesystem_access:
+  name: "File System Access"
+  description: "Secure file operations with access controls"
+  typical_tools:
+    - search_files: "Search files by pattern or content"
+    - read_file: "Read file contents (with permission check)"
+    - list_directory: "List directory contents"
+    - get_file_info: "Get file metadata"
+  typical_resources:
+    - "file:///{absolute_path}"
+    - "file:///workspace/{relative_path}"
+  dependencies:
+    typescript: ["fs/promises", "glob", "ignore"]
+    python: ["pathlib", "glob", "gitignore_parser"]
+  security_notes:
+    - "Implement strict path validation (prevent ../ attacks)"
+    - "Use allowlist/denylist for directories"
+    - "Never allow writes without explicit approval"
+
+workflow_automation:
+  name: "Workflow Automation"
+  description: "Trigger and monitor automated workflows"
+  typical_tools:
+    - trigger_workflow: "Start a workflow with parameters"
+    - get_workflow_status: "Check workflow execution status"
+    - list_workflows: "List available workflows"
+    - cancel_workflow: "Cancel running workflow"
+  typical_prompts:
+    - deployment_workflow: "Template for deployment approvals"
+    - testing_workflow: "Template for test execution"
+  dependencies:
+    typescript: ["@actions/core", "@octokit/rest"]
+    python: ["github", "gitlab"]
+  security_notes:
+    - "Require approval for destructive operations"
+    - "Log all workflow executions"
+    - "Implement timeout mechanisms"
+
+search_integration:
+  name: "Search Integration"
+  description: "Connect to search engines and indexing systems"
+  typical_tools:
+    - search: "Full-text search with filters"
+    - semantic_search: "Vector-based semantic search"
+    - index_document: "Add document to search index"
+  typical_resources:
+    - "search://query/{query}"
+    - "search://document/{doc_id}"
+  dependencies:
+    typescript: ["@elastic/elasticsearch", "typesense"]
+    python: ["elasticsearch", "typesense"]
+  security_notes:
+    - "Sanitize search queries"
+    - "Implement access control on results"
+    - "Rate limit search requests"
+
+notification_system:
+  name: "Notification System"
+  description: "Send notifications via email, Slack, SMS"
+  typical_tools:
+    - send_notification: "Send notification to channel"
+    - get_notification_history: "Retrieve past notifications"
+    - create_alert: "Set up automated alerts"
+  dependencies:
+    typescript: ["@slack/web-api", "nodemailer", "twilio"]
+    python: ["slack_sdk", "sendgrid", "twilio"]
+  security_notes:
+    - "Validate recipient addresses"
+    - "Prevent notification spam"
+    - "Never expose credentials in logs"
+
+data_processing:
+  name: "Data Processing Pipeline"
+  description: "Transform, analyze, and aggregate data"
+  typical_tools:
+    - transform_data: "Apply transformations to dataset"
+    - aggregate_data: "Compute aggregations and statistics"
+    - validate_data: "Validate data against schema"
+  typical_resources:
+    - "data://dataset/{name}"
+    - "data://schema/{schema_id}"
+  dependencies:
+    typescript: ["papaparse", "lodash", "ajv"]
+    python: ["pandas", "numpy", "jsonschema"]
+  security_notes:
+    - "Validate data schemas"
+    - "Implement size limits"
+    - "Sanitize outputs"
+
+authentication_service:
+  name: "Authentication Service"
+  description: "User authentication and authorization checks"
+  typical_tools:
+    - verify_token: "Validate authentication token"
+    - get_user_permissions: "Retrieve user permissions"
+    - check_access: "Check if user has access to resource"
+  dependencies:
+    typescript: ["jsonwebtoken", "passport", "bcrypt"]
+    python: ["pyjwt", "passlib", "python-jose"]
+  security_notes:
+    - "Never expose secrets or tokens"
+    - "Use secure token storage"
+    - "Implement token expiration"
+    - "Log all authentication attempts"
