@@ -33,7 +33,8 @@
         "./tdd-automation",
         "./sub-agent-creator",
         "./mcp-server-creator",
-        "./react-project-scaffolder"
+        "./react-project-scaffolder",
+        "./github-repo-setup"
       ]
     },
     {

@@ -79,6 +79,7 @@ Then browse and install skills:
 /plugin install sub-agent-creator@claudex
 /plugin install mcp-server-creator@claudex
 /plugin install react-project-scaffolder@claudex
+/plugin install github-repo-setup@claudex
 ```
 
 ### Option 2: Team Configuration (Auto-Install)
@@ -108,7 +109,8 @@ Add to your project's `.claude/settings.json` for automatic setup:
     "tdd-automation@claudex",
     "sub-agent-creator@claudex",
     "mcp-server-creator@claudex",
-    "react-project-scaffolder@claudex"
+    "react-project-scaffolder@claudex",
+    "github-repo-setup@claudex"
   ]
 }
 ```
@@ -133,6 +135,7 @@ When team members trust your repository, these plugins install automatically.
 | **[tdd-automation](./tdd-automation/)** | Automated TDD enforcement for LLM-assisted development. Installs infrastructure that makes Claude Code automatically follow red-green-refactor workflow without manual intervention. | `0.2.0` | Productivity |
 | **[sub-agent-creator](./sub-agent-creator/)** | Automates creation of Claude Code sub-agents following Anthropic's official patterns, with proper frontmatter, tool configuration, and system prompts. | `0.1.0` | Tooling |
 | **[mcp-server-creator](./mcp-server-creator/)** | Automated MCP server creation tool that generates production-ready Model Context Protocol servers with TypeScript/Python SDKs, configuration templates, and Claude Desktop integration. | `0.1.0` | Tooling |
+| **[github-repo-setup](./github-repo-setup/)** | Automated GitHub repository setup with four modes - quick public repos, enterprise-grade with security and CI/CD, open-source community standards, and private team collaboration with governance. | `0.1.0` | Productivity |
 | **[react-project-scaffolder](./react-project-scaffolder/)** | Automated React project scaffolding with three modes - simple sandbox for testing, enterprise-grade with modern tooling, and mobile React with production best practices. | `0.1.0` | Productivity |
 
 **Most skills are at version 0.1.0-0.2.0 (proof of concept)**. Production-ready versions will follow semantic versioning with git tags after successful merges to main.

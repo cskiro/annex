@@ -1,0 +1,106 @@
+# GitHub Security Features Configuration
+# Based on GitHub official best practices (2024-2025)
+
+dependabot:
+  name: "Dependabot Alerts"
+  description: "Notify about security vulnerabilities in dependencies"
+  availability: "All repositories"
+  api_endpoint: "/repos/{owner}/{repo}/vulnerability-alerts"
+  method: "PUT"
+  required_modes: ["quick", "enterprise", "open-source", "private-team"]
+
+automated_security_fixes:
+  name: "Dependabot Security Updates"
+  description: "Automatically create PRs to update vulnerable dependencies"
+  availability: "All repositories"
+  api_endpoint: "/repos/{owner}/{repo}/automated-security-fixes"
+  method: "PUT"
+  required_modes: ["enterprise", "open-source", "private-team"]
+
+secret_scanning:
+  name: "Secret Scanning"
+  description: "Detect exposed secrets in code"
+  availability: "Public repos (free), Private repos (GitHub Advanced Security)"
+  api_endpoint: "/repos/{owner}/{repo}/secret-scanning"
+  method: "PUT"
+  required_modes: ["enterprise", "open-source"]
+
+push_protection:
+  name: "Push Protection"
+  description: "Prevent pushing commits with detected secrets"
+  availability: "Requires secret scanning"
+  api_endpoint: "/repos/{owner}/{repo}/secret-scanning-push-protection"
+  method: "PUT"
+  required_modes: ["enterprise"]
+
+code_scanning:
+  name: "Code Scanning (CodeQL)"
+  description: "Identify vulnerabilities and errors in code"
+  availability: "Public repos (free), Private repos (GitHub Advanced Security)"
+  implementation: "github-actions-workflow"
+  workflow_file: ".github/workflows/codeql.yml"
+  required_modes: ["enterprise"]
+
+branch_protection:
+  name: "Branch Protection Rules"
+  description: "Protect important branches with required checks"
+  availability: "All repositories"
+  api_endpoint: "/repos/{owner}/{repo}/branches/{branch}/protection"
+  method: "PUT"
+  required_modes: ["enterprise", "private-team"]
+  rules:
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: true
+    required_status_checks:
+      strict: true
+      contexts: ["ci/test", "ci/lint"]
+    enforce_admins: false
+    restrictions: null
+
+security_advisories:
+  name: "Private Vulnerability Reporting"
+  description: "Allow security researchers to privately report vulnerabilities"
+  availability: "Public repositories"
+  setup: "Repository Settings → Security → Enable private vulnerability reporting"
+  required_modes: ["open-source"]
+
+security_policy:
+  name: "SECURITY.md"
+  description: "Document security policy and vulnerability reporting process"
+  location: "Root, .github/, or docs/"
+  required_modes: ["all"]
+  template: |
+    # Security Policy
+
+    ## Supported Versions
+
+    Currently supported versions:
+
+    | Version | Supported          |
+    | ------- | ------------------ |
+    | 1.0.x   | :white_check_mark: |
+    | < 1.0   | :x:                |
+
+    ## Reporting a Vulnerability
+
+    Please report security vulnerabilities to [security@example.com](mailto:security@example.com).
+
+    **Please do not report security vulnerabilities through public GitHub issues.**
+
+    You should receive a response within 48 hours. If the issue is confirmed, we will release a patch as soon as possible.
+
+two_factor_authentication:
+  name: "Two-Factor Authentication"
+  description: "Require 2FA for all organization members"
+  availability: "Organization settings"
+  recommendation: "Enforce for all users with write access"
+  setup: "Organization Settings → Authentication security → Require two-factor authentication"
+
+signed_commits:
+  name: "Commit Signature Verification"
+  description: "Verify commits are signed with GPG/SSH keys"
+  availability: "All repositories"
+  setup: "Branch protection → Require signed commits"
+  recommended_for: ["enterprise", "private-team"]
