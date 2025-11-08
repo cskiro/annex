@@ -1,0 +1,42 @@
+{
+  "name": "react-project-scaffolder",
+  "version": "0.1.0",
+  "description": "Automated React project scaffolding with three modes - simple sandbox for testing, enterprise-grade with modern tooling, and mobile React with production best practices",
+  "author": "Connor",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cskiro/claudex/tree/main/react-project-scaffolder",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "keywords": [
+    "react",
+    "scaffolding",
+    "project-setup",
+    "automation",
+    "vite",
+    "nextjs",
+    "expo",
+    "react-native",
+    "typescript",
+    "testing",
+    "developer-tools",
+    "productivity"
+  ],
+  "requirements": {
+    "node": ">=18.0.0"
+  },
+  "components": {
+    "agents": [
+      {
+        "name": "react-project-scaffolder",
+        "manifestPath": "SKILL.md"
+      }
+    ]
+  },
+  "metadata": {
+    "category": "productivity",
+    "status": "proof-of-concept",
+    "tested": "1-2 projects locally"
+  }
+}
