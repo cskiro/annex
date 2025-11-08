@@ -32,7 +32,8 @@
         "./skill-creator",
         "./tdd-automation",
         "./sub-agent-creator",
-        "./mcp-server-creator"
+        "./mcp-server-creator",
+        "./react-project-scaffolder"
       ]
     },
     {

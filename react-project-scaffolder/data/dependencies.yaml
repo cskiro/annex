@@ -1,0 +1,59 @@
+# React Project Scaffolder - Dependencies Reference
+# This file contains the package versions and dependencies for each mode
+
+sandbox:
+  base_command: "npm create vite@latest {project-name} -- --template react-ts"
+  dev_dependencies:
+    - prettier@latest
+    - eslint-config-prettier@latest
+
+enterprise:
+  base_command: "npx create-next-app@latest {project-name} --typescript --eslint --app --src-dir --import-alias '@/*'"
+  testing_dependencies:
+    - vitest@latest
+    - "@vitejs/plugin-react@latest"
+    - jsdom@latest
+    - "@testing-library/react@latest"
+    - "@testing-library/jest-dom@latest"
+    - "@testing-library/user-event@latest"
+    - "@vitest/coverage-v8@latest"
+  quality_dependencies:
+    - prettier@latest
+    - eslint-config-prettier@latest
+    - husky@latest
+    - lint-staged@latest
+
+mobile:
+  base_command: "npx create-expo-app@latest {project-name} --template blank-typescript"
+  router_dependencies:
+    - expo-router@latest
+    - react-native-safe-area-context@latest
+    - react-native-screens@latest
+    - expo-linking@latest
+    - expo-constants@latest
+    - expo-status-bar@latest
+  testing_dependencies:
+    - jest@latest
+    - jest-expo@latest
+    - "@testing-library/react-native@latest"
+    - "@testing-library/jest-native@latest"
+    - "@types/jest@latest"
+  quality_dependencies:
+    - "@typescript-eslint/parser@latest"
+    - "@typescript-eslint/eslint-plugin@latest"
+    - eslint-plugin-react@latest
+    - eslint-plugin-react-native@latest
+    - prettier@latest
+    - eslint-config-prettier@latest
+    - husky@latest
+    - lint-staged@latest
+
+# Node version requirements
+node_requirements:
+  minimum: "18.0.0"
+  recommended: "20.0.0"
+
+# npm version requirements
+npm_requirements:
+  minimum: "9.0.0"
+  recommended: "10.0.0"
