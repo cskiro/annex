@@ -602,7 +602,8 @@ def execute_tool_with_retry(
 
     for attempt in range(max_retries):
         try:
-            result = TOOL_FUNCTIONS[tool_name](**tool_input)
+            tool_func = TOOL_FUNCTIONS[tool_name]
+            result = tool_func(**tool_input)
             return {"success": True, "data": result}
 
         except Exception as e:
