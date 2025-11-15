@@ -1,11 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/hooks.schema.json",
-  "Stop": [
-    {
-      "matcher": "",
-      "type": "command",
-      "command": "${CLAUDE_PLUGIN_ROOT}/hooks/extract-explanatory-insights.sh",
-      "description": "Extract ★ Insight blocks from Claude Code responses after agent stops"
-    }
-  ]
+  "description": "Productivity enhancement hooks for automated insight extraction and learning",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "type": "command",
+        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/extract-explanatory-insights.sh",
+        "description": "Extract ★ Insight blocks from Claude Code responses after agent stops"
+      }
+    ]
+  }
 }
