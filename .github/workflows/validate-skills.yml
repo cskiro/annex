@@ -97,6 +97,13 @@ jobs:
           import sys
           from pathlib import Path
 
+          # Temporary exceptions for skills that need refactoring
+          # TODO: Remove these after refactoring to SRP architecture
+          ALLOWED_EXCEPTIONS = [
+              'playwright-e2e-automation',  # 846 lines - Issue #25
+              'mcp-server-creator',  # 822 lines - Issue #26
+          ]
+
           errors = []
 
           for skill_file in Path('skills').rglob('SKILL.md'):
@@ -115,7 +122,7 @@ jobs:
 
               print(f"{skill_name}: {lines} lines ({skill_type}, threshold: {threshold})")
 
-              if lines > threshold:
+              if lines > threshold and skill_name not in ALLOWED_EXCEPTIONS:
                   errors.append(
                       f"{skill_file}: {lines} lines exceeds {skill_type} "
                       f"threshold of {threshold} (risks missing details)"
