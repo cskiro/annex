@@ -5,9 +5,13 @@
     "Stop": [
       {
         "matcher": "",
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/extract-explanatory-insights.sh",
-        "description": "Extract ★ Insight blocks from Claude Code responses after agent stops"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/extract-explanatory-insights.sh",
+            "description": "Extract ★ Insight blocks from Claude Code responses after agent stops"
+          }
+        ]
       }
     ]
   }
