@@ -1,0 +1,244 @@
+name: Validate Skills
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'skills/**'
+
+jobs:
+  validate-skills:
+    name: Validate Skill Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml pylint black mypy anthropic pydantic
+
+      - name: Validate Python syntax in examples
+        run: |
+          echo "🔍 Validating Python syntax..."
+          find skills -name "*.py" -type f | while read file; do
+            echo "Checking $file"
+            python -m py_compile "$file" || exit 1
+          done
+          echo "✅ All Python files have valid syntax"
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          echo "🔍 Validating SKILL.md frontmatter..."
+          python3 << 'EOF'
+          import yaml
+          import sys
+          from pathlib import Path
+
+          required_fields = ['name', 'version', 'description', 'author']
+          errors = []
+
+          for skill_file in Path('skills').rglob('SKILL.md'):
+              print(f"Checking {skill_file}")
+
+              with open(skill_file) as f:
+                  content = f.read()
+
+              # Extract frontmatter
+              if not content.startswith('---'):
+                  errors.append(f"{skill_file}: Missing frontmatter")
+                  continue
+
+              parts = content.split('---', 2)
+              if len(parts) < 3:
+                  errors.append(f"{skill_file}: Invalid frontmatter structure")
+                  continue
+
+              try:
+                  frontmatter = yaml.safe_load(parts[1])
+              except yaml.YAMLError as e:
+                  errors.append(f"{skill_file}: Invalid YAML - {e}")
+                  continue
+
+              # Check required fields
+              for field in required_fields:
+                  if field not in frontmatter:
+                      errors.append(f"{skill_file}: Missing required field '{field}'")
+
+              # Validate version format (semver)
+              version = frontmatter.get('version', '')
+              if not version or not all(part.isdigit() for part in version.split('.')):
+                  errors.append(f"{skill_file}: Invalid version format '{version}'")
+
+          if errors:
+              print("❌ Frontmatter validation errors:")
+              for error in errors:
+                  print(f"  - {error}")
+              sys.exit(1)
+
+          print("✅ All SKILL.md frontmatter is valid")
+          EOF
+
+      - name: Check line count thresholds
+        run: |
+          echo "🔍 Checking skill line count thresholds..."
+          python3 << 'EOF'
+          import sys
+          from pathlib import Path
+
+          errors = []
+
+          for skill_file in Path('skills').rglob('SKILL.md'):
+              with open(skill_file) as f:
+                  lines = len(f.readlines())
+
+              skill_name = skill_file.parent.name
+
+              # Orchestrator skills should be <500, specialists <800
+              if 'advisor' in skill_name.lower() or 'orchestrator' in skill_name.lower():
+                  threshold = 500
+                  skill_type = "orchestrator"
+              else:
+                  threshold = 800
+                  skill_type = "specialist"
+
+              print(f"{skill_name}: {lines} lines ({skill_type}, threshold: {threshold})")
+
+              if lines > threshold:
+                  errors.append(
+                      f"{skill_file}: {lines} lines exceeds {skill_type} "
+                      f"threshold of {threshold} (risks missing details)"
+                  )
+
+          if errors:
+              print("\n❌ Line count threshold violations:")
+              for error in errors:
+                  print(f"  - {error}")
+              sys.exit(1)
+
+          print("\n✅ All skills within line count thresholds")
+          EOF
+
+      - name: Validate file structure
+        run: |
+          echo "🔍 Validating skill directory structure..."
+          python3 << 'EOF'
+          import sys
+          from pathlib import Path
+
+          errors = []
+
+          # Find all skill directories (contain SKILL.md)
+          skill_dirs = [p.parent for p in Path('skills').rglob('SKILL.md')]
+
+          for skill_dir in skill_dirs:
+              print(f"Checking {skill_dir}")
+
+              # Required files
+              required_files = ['SKILL.md', 'README.md', 'CHANGELOG.md']
+              for req_file in required_files:
+                  file_path = skill_dir / req_file
+                  if not file_path.exists():
+                      errors.append(f"{skill_dir}: Missing {req_file}")
+
+              # Required directories
+              required_dirs = ['examples', 'reference']
+              for req_dir in required_dirs:
+                  dir_path = skill_dir / req_dir
+                  if not dir_path.exists():
+                      errors.append(f"{skill_dir}: Missing {req_dir}/ directory")
+
+          if errors:
+              print("❌ File structure validation errors:")
+              for error in errors:
+                  print(f"  - {error}")
+              sys.exit(1)
+
+          print("✅ All skills have correct file structure")
+          EOF
+
+      - name: Check for broken internal links
+        run: |
+          echo "🔍 Checking for broken internal links..."
+          python3 << 'EOF'
+          import re
+          import sys
+          from pathlib import Path
+
+          errors = []
+
+          # Pattern for markdown links: [text](path)
+          link_pattern = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
+
+          for md_file in Path('skills').rglob('*.md'):
+              with open(md_file) as f:
+                  content = f.read()
+
+              for match in link_pattern.finditer(content):
+                  link_text = match.group(1)
+                  link_path = match.group(2)
+
+                  # Skip external links
+                  if link_path.startswith(('http://', 'https://', '#')):
+                      continue
+
+                  # Resolve relative path
+                  target = (md_file.parent / link_path).resolve()
+
+                  if not target.exists():
+                      errors.append(
+                          f"{md_file}:\n"
+                          f"  Broken link: [{link_text}]({link_path})\n"
+                          f"  Target not found: {target}"
+                      )
+
+          if errors:
+              print("❌ Broken link errors:")
+              for error in errors:
+                  print(f"  {error}")
+              sys.exit(1)
+
+          print("✅ All internal links are valid")
+          EOF
+
+      - name: Lint Python examples (optional warnings)
+        continue-on-error: true
+        run: |
+          echo "🔍 Linting Python examples..."
+          find skills -name "*.py" -type f | while read file; do
+            echo "Linting $file"
+            pylint "$file" --disable=all --enable=E || true
+          done
+
+      - name: Check Python formatting
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking Python formatting..."
+          find skills -name "*.py" -type f -exec black --check {} + || echo "⚠️  Some files need formatting (run 'black .')"
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "================================"
+          echo "✅ All skill validations passed!"
+          echo "================================"
+          echo ""
+          echo "Validated:"
+          echo "  - Python syntax"
+          echo "  - SKILL.md frontmatter"
+          echo "  - Line count thresholds"
+          echo "  - File structure"
+          echo "  - Internal links"
+          echo ""
+          echo "Skills are ready for review!"
