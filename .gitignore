@@ -7,12 +7,12 @@ Desktop.ini
 .claude/settings.local.json
 .claude/skills/
 
-# Internal documentation and planning
-docs/
+# Internal documentation and planning (root level only)
+/docs/
 
-# Internal automation (not for public distribution)
-.github/
-scripts/
+# Internal automation (not for public distribution - root level only)
+/.github/
+/scripts/
 
 # Environment files
 .env

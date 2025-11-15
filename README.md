@@ -1,90 +1,152 @@
-# Claudex - Claude Code Skills
+# Claudex - Claude Code Marketplace
 
-> A curated collection of production-quality skills for [Claude Code](https://claude.com/claude-code)
+> Skills and hooks for [Claude Code](https://claude.com/claude-code) - code quality analysis, testing automation, productivity tools, and DevOps workflows
 
-## Executive Summary
+## Quick Start
 
-**Claudex** is a marketplace-ready repository of specialized skills that extend Claude Code's capabilities across critical software engineering workflows. Each skill provides domain-specific expertise - from comprehensive codebase auditing to OpenTelemetry observability setup - packaged as invokable agents with built-in validation, troubleshooting, and best practices.
+### Install via Marketplace
 
-**Current Focus Areas:**
-- **Code Quality & Security** - Automated auditing against modern SDLC standards
-- **Architecture Patterns** - React/TypeScript application validation
-- **Observability** - OpenTelemetry setup and configuration automation
-- **Developer Productivity** - Conversation analysis, semantic search, and parallel development workflows
-- **Configuration Management** - CLAUDE.md validation and compliance
+```bash
+# Add the marketplace
+/plugin marketplace add cskiro/claudex
 
-**Status:** Proof of concept (v0.1.0) - All skills tested locally on 1-2 projects. Not production-validated.
+# Install plugin bundles
+/plugin install analysis-tools@claudex
+/plugin install claude-code-tools@claudex
+/plugin install meta-tools@claudex
+/plugin install testing-tools@claudex
+/plugin install devops-tools@claudex
 
-### How Skills Work
+# (Optional) Install productivity hooks
+/plugin install productivity-hooks@claudex
+```
 
-1. **Discovery**: Claude Code automatically scans `~/.claude/skills/` (global) and `.claude/skills/` (local)
-2. **Loading**: Each skill has a `SKILL.md` file that Claude reads to understand capabilities
-3. **Invocation**: Simply describe what you want in natural language
-4. **Execution**: Claude uses the skill's scripts and reference materials to complete the task
+### Updating from v0.x
+
+If you previously installed claudex v0.2.0 or earlier:
+
+```bash
+# Update the marketplace
+/plugin marketplace update claudex
+
+# Your installed plugins will automatically use the new structure
+```
+
+---
+
+## Repository Structure
+
+```
+claudex/
+├── skills/              # Invokable agent skills
+│   ├── analysis/        # Code quality & architecture analysis
+│   ├── claude-code/     # Claude Code ecosystem tools
+│   ├── meta/            # Tools for creating/testing skills
+│   ├── testing/         # Testing frameworks
+│   └── devops/          # Infrastructure & project automation
+├── hooks/               # Event-driven automation
+│   └── extract-explanatory-insights/
+├── commands/            # (Future) Custom slash commands
+├── agents/              # (Future) Custom agent workflows
+└── .claude-plugin/      # Marketplace configuration
+```
+
+---
+
+## Available Plugins
+
+### Analysis Tools
+
+**`analysis-tools`** - Code quality, security, and architecture analysis
+
+| Skill | Description |
+|-------|-------------|
+| **codebase-auditor** | Comprehensive codebase analysis against 2024-25 SDLC standards (OWASP, WCAG, DORA) |
+| **bulletproof-react-auditor** | React application auditor based on Bulletproof React architecture patterns |
+
+### Claude Code Tools
+
+**`claude-code-tools`** - Enhance and extend the Claude Code ecosystem
+
+| Skill | Description |
+|-------|-------------|
+| **cc-insights** | RAG-powered conversation analysis with semantic search and insight reports |
+| **sub-agent-creator** | Generate Claude Code sub-agents following Anthropic's official patterns |
+| **mcp-server-creator** | Create Model Context Protocol servers with TypeScript/Python SDKs |
+| **claude-md-auditor** | Validate CLAUDE.md files against official standards and best practices |
+| **otel-monitoring-setup** | Automated OpenTelemetry setup with Docker stack and Grafana dashboards |
+
+### Meta Tools
+
+**`meta-tools`** - Create and test Claude Code skills
+
+| Skill | Description |
+|-------|-------------|
+| **skill-creator** | Generate skills following Claudex marketplace standards |
+| **skill-isolation-tester** | Test skills in isolated environments (worktree, Docker, VMs) |
+
+### Testing Tools
+
+**`testing-tools`** - Automated testing frameworks
+
+| Skill | Description |
+|-------|-------------|
+| **playwright-e2e-automation** | LLM-powered e2e testing with visual debugging and regression testing |
+| **tdd-automation** | Automated TDD enforcement for LLM-assisted development |
+
+### DevOps Tools
+
+**`devops-tools`** - Infrastructure automation and project scaffolding
+
+| Skill | Description |
+|-------|-------------|
+| **react-project-scaffolder** | React project setup (sandbox, enterprise, mobile modes) |
+| **github-repo-setup** | GitHub repository creation with security, CI/CD, and governance |
+| **git-worktree-setup** | Parallel Claude Code sessions via git worktrees |
+
+### Productivity Hooks
+
+**`productivity-hooks`** - Automated insight extraction and learning
+
+| Hook | Description |
+|------|-------------|
+| **extract-explanatory-insights** | Auto-extracts `★ Insight` blocks from Explanatory responses to categorized docs |
+
+**Usage:**
+1. Install: `/plugin install productivity-hooks@claudex`
+2. Enable Explanatory style: `/output-style explanatory`
+3. Insights auto-save to `docs/lessons-learned/{category}/insights.md`
 
 ---
 
 ## Prerequisites
 
-To use skills from this repository, you need:
-
-### Required
 - **Claude Code** - Latest version ([Download](https://claude.com/claude-code))
-- **Git** - For cloning and marketplace integration
+- **Git** - For marketplace integration
 - **Node.js** 18+ - For marketplace infrastructure
-- **Python** 3.8+ - For Python-based skills (codebase-auditor, bulletproof-react-auditor, etc.)
+- **Python** 3.8+ - For Python-based skills
+- **jq** 1.6+ - For hooks (install via `brew install jq` on macOS)
 
 ### Optional (Skill-Specific)
-- **Docker Desktop** - Required for `otel-monitoring-setup` skill
-- **Python Packages** - Install per skill's `requirements.txt`:
-  - `cc-insights`: sentence-transformers, chromadb, jinja2, click, python-dateutil
-  - `codebase-auditor`: PyYAML, requests
-  - `bulletproof-react-auditor`: PyYAML
-  - `claude-md-auditor`: PyYAML, jsonschema
-
-### System Requirements
-- **Disk Space**: 100MB-2GB depending on skills installed
-- **RAM**: 2GB minimum (4GB recommended for cc-insights)
-- **OS**: macOS, Linux, or Windows with WSL2
+- **Docker Desktop** - For `otel-monitoring-setup`
+- **Python packages** - Install per skill's `requirements.txt`
 
 ---
 
-## Quick Start
+## Features
 
-### Option 1: Install via Marketplace (Recommended)
+- **14 Skills** across 5 categories (analysis, claude-code, meta, testing, devops)
+- **1 Hook** for automated insight extraction
+- **Semantic categorization** - Skills organized by purpose, not theme
+- **Multi-feature support** - Skills, hooks, commands (future), agents (future)
+- **Cross-platform** - macOS, Linux, Windows (WSL2)
+- **Marketplace ready** - Standard directory structure following Anthropic patterns
 
-Add the claudex marketplace to your Claude Code:
+---
 
-```bash
-/plugin marketplace add cskiro/claudex
-```
+## Team Configuration
 
-Then browse and install skills:
-
-```bash
-# Browse all available skills
-/plugin
-
-# Or install specific skills directly
-/plugin install codebase-auditor@claudex
-/plugin install bulletproof-react-auditor@claudex
-/plugin install claude-md-auditor@claudex
-/plugin install cc-insights@claudex
-/plugin install otel-monitoring-setup@claudex
-/plugin install git-worktree-setup@claudex
-/plugin install playwright-e2e-automation@claudex
-/plugin install skill-creator@claudex
-/plugin install skill-isolation-tester@claudex
-/plugin install tdd-automation@claudex
-/plugin install sub-agent-creator@claudex
-/plugin install mcp-server-creator@claudex
-/plugin install react-project-scaffolder@claudex
-/plugin install github-repo-setup@claudex
-```
-
-### Option 2: Team Configuration (Auto-Install)
-
-Add to your project's `.claude/settings.json` for automatic setup:
+Add to `.claude/settings.json` for automatic installation:
 
 ```json
 {
@@ -97,63 +159,42 @@ Add to your project's `.claude/settings.json` for automatic setup:
     }
   },
   "enabledPlugins": [
-    "codebase-auditor@claudex",
-    "bulletproof-react-auditor@claudex",
-    "claude-md-auditor@claudex",
-    "cc-insights@claudex",
-    "otel-monitoring-setup@claudex",
-    "git-worktree-setup@claudex",
-    "playwright-e2e-automation@claudex",
-    "skill-creator@claudex",
-    "skill-isolation-tester@claudex",
-    "tdd-automation@claudex",
-    "sub-agent-creator@claudex",
-    "mcp-server-creator@claudex",
-    "react-project-scaffolder@claudex",
-    "github-repo-setup@claudex"
+    "analysis-tools@claudex",
+    "claude-code-tools@claudex",
+    "meta-tools@claudex",
+    "testing-tools@claudex",
+    "devops-tools@claudex",
+    "productivity-hooks@claudex"
   ]
 }
 ```
 
-When team members trust your repository, these plugins install automatically.
+When team members trust your repository, plugins install automatically.
 
 ---
 
-## Available Skills
+## Version History
 
-| Skill | Description | Version | Category |
-|-------|-------------|---------|----------|
-| **[codebase-auditor](./codebase-auditor/)** | Comprehensive codebase analysis for quality, security, and technical debt. Audits against 2024-25 SDLC standards (OWASP, WCAG, DORA). | `0.1.0` | Analysis |
-| **[bulletproof-react-auditor](./bulletproof-react-auditor/)** | React application auditor based on Bulletproof React architecture guide. Evaluates project structure, component patterns, state management, and performance. | `0.1.0` | Analysis |
-| **[claude-md-auditor](./claude-md-auditor/)** | Validates CLAUDE.md configuration files against official schema standards and community best practices for LLM context optimization. | `0.1.0` | Tooling |
-| **[cc-insights](./cc-insights/)** | RAG-powered conversation analysis with semantic search. Automatically processes Claude Code history to generate insight reports and detect development patterns. | `0.1.0` | Productivity |
-| **[git-worktree-setup](./git-worktree-setup/)** | Automated git worktree creation for parallel Claude Code sessions. Enables working on multiple branches simultaneously with full development environment setup. | `0.1.0` | Productivity |
-| **[otel-monitoring-setup](./otel-monitoring-setup/)** | Automated OpenTelemetry setup with local PoC mode (Docker stack + Grafana) and enterprise mode. Includes validation scripts and troubleshooting. | `0.2.0` | DevOps |
-| **[playwright-e2e-automation](./playwright-e2e-automation/)** | Automated Playwright e2e testing framework with LLM-powered visual debugging, screenshot analysis, and regression testing. Zero-setup automation for React/Vite, Node.js, and full-stack apps. | `0.2.0` | Tooling |
-| **[skill-creator](./skill-creator/)** | Automated skill generation tool that creates production-ready Claude Code skills following Claudex marketplace standards with intelligent templates and quality validation. | `0.1.0` | Productivity |
-| **[skill-isolation-tester](./skill-isolation-tester/)** | Automated testing framework for Claude Code skills using multiple isolation environments (git worktree, Docker, VMs) to validate behavior before public release. | `0.1.0` | Quality Assurance |
-| **[tdd-automation](./tdd-automation/)** | Automated TDD enforcement for LLM-assisted development. Installs infrastructure that makes Claude Code automatically follow red-green-refactor workflow without manual intervention. | `0.2.0` | Productivity |
-| **[sub-agent-creator](./sub-agent-creator/)** | Automates creation of Claude Code sub-agents following Anthropic's official patterns, with proper frontmatter, tool configuration, and system prompts. | `0.1.0` | Tooling |
-| **[mcp-server-creator](./mcp-server-creator/)** | Automated MCP server creation tool that generates production-ready Model Context Protocol servers with TypeScript/Python SDKs, configuration templates, and Claude Desktop integration. | `0.1.0` | Tooling |
-| **[github-repo-setup](./github-repo-setup/)** | Automated GitHub repository setup with four modes - quick public repos, enterprise-grade with security and CI/CD, open-source community standards, and private team collaboration with governance. | `0.1.0` | Productivity |
-| **[react-project-scaffolder](./react-project-scaffolder/)** | Automated React project scaffolding with three modes - simple sandbox for testing, enterprise-grade with modern tooling, and mobile React with production best practices. | `0.1.0` | Productivity |
+**v1.0.0** (Current) - First stable release
+- Reorganized structure (root-level skills/, hooks/, commands/, agents/)
+- Added hook support (`extract-explanatory-insights`)
+- Semantic skill categorization (analysis, claude-code, meta, testing, devops)
+- macOS/Linux compatibility fixes
+- 14 skills + 1 hook
 
-**Most skills are at version 0.1.0-0.2.0 (proof of concept)**. Production-ready versions will follow semantic versioning with git tags after successful merges to main.
+**v0.2.0** - Added playwright-e2e, tdd-automation, otel-monitoring, github-repo-setup, react-scaffolder
+**v0.1.0** - Initial release with 9 skills
 
 ---
 
 ## License
 
-**License**: Apache 2.0
+Apache 2.0
 
 ---
 
 **Maintained by**: Connor
+**Current Version**: v1.0.0
+**Last Updated**: 2025-11-14
 
-**Current Version**: v0.1.0 (Proof of Concept)
-
-**Status**: Beta - All skills tested locally on 1-2 projects
-
-**Last Updated**: 2025-11-02
-
-*Experimental skills for extending Claude Code capabilities. Versioning via git tags follows successful merges to main.*
+*Skills and hooks for extending Claude Code capabilities across the software development lifecycle.*
