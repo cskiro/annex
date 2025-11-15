@@ -1,0 +1,32 @@
+{
+  "name": "extract-explanatory-insights",
+  "version": "0.1.0",
+  "description": "Automatically extracts ★ Insight blocks from Claude Code Explanatory responses and organizes them into categorized lessons-learned documentation",
+  "author": {
+    "name": "Connor",
+    "email": "noreply@claudex.dev"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cskiro/claudex"
+  },
+  "homepage": "https://github.com/cskiro/claudex/tree/main/plugins/hooks/extract-explanatory-insights",
+  "keywords": [
+    "hook",
+    "insights",
+    "explanatory",
+    "documentation",
+    "learning",
+    "productivity"
+  ],
+  "metadata": {
+    "category": "productivity",
+    "status": "stable"
+  },
+  "requirements": {
+    "claude_code": ">=1.0.0",
+    "bash": ">=4.0",
+    "jq": ">=1.6"
+  }
+}

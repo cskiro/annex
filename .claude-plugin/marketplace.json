@@ -5,8 +5,8 @@
     "email": "noreply@claudex.dev"
   },
   "metadata": {
-    "description": "Production-ready skills for Claude Code - code quality analysis, testing automation, productivity tools, and DevOps workflows",
-    "version": "0.2.0",
+    "description": "Skills and hooks for Claude Code - code quality analysis, testing automation, productivity tools, and DevOps workflows",
+    "version": "1.0.0",
     "homepage": "https://github.com/cskiro/claudex"
   },
   "plugins": [
@@ -16,25 +16,31 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./codebase-auditor",
-        "./bulletproof-react-auditor",
-        "./claude-md-auditor"
+        "./skills/analysis/codebase-auditor",
+        "./skills/analysis/bulletproof-react-auditor"
       ]
     },
     {
-      "name": "productivity-tools",
-      "description": "Development workflow automation, insights, and skill creation tools",
+      "name": "claude-code-tools",
+      "description": "Tools for enhancing and extending the Claude Code ecosystem",
       "source": "./",
       "strict": false,
       "skills": [
-        "./cc-insights",
-        "./git-worktree-setup",
-        "./skill-creator",
-        "./tdd-automation",
-        "./sub-agent-creator",
-        "./mcp-server-creator",
-        "./react-project-scaffolder",
-        "./github-repo-setup"
+        "./skills/claude-code/cc-insights",
+        "./skills/claude-code/sub-agent-creator",
+        "./skills/claude-code/mcp-server-creator",
+        "./skills/claude-code/claude-md-auditor",
+        "./skills/claude-code/otel-monitoring-setup"
+      ]
+    },
+    {
+      "name": "meta-tools",
+      "description": "Tools for creating and testing Claude Code skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/meta/skill-creator",
+        "./skills/meta/skill-isolation-tester"
       ]
     },
     {
@@ -43,18 +49,29 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./playwright-e2e-automation",
-        "./skill-isolation-tester"
+        "./skills/testing/playwright-e2e-automation",
+        "./skills/testing/tdd-automation"
       ]
     },
     {
       "name": "devops-tools",
-      "description": "Infrastructure automation and monitoring setup",
+      "description": "Infrastructure automation, project scaffolding, and repository setup",
       "source": "./",
       "strict": false,
       "skills": [
-        "./otel-monitoring-setup"
+        "./skills/devops/react-project-scaffolder",
+        "./skills/devops/github-repo-setup",
+        "./skills/devops/git-worktree-setup"
       ]
+    },
+    {
+      "name": "productivity-hooks",
+      "description": "Productivity enhancement hooks for automated insight extraction and learning",
+      "source": "./",
+      "strict": false,
+      "hooks": "./hooks/extract-explanatory-insights/hooks.json",
+      "category": "productivity",
+      "version": "0.1.0"
     }
   ]
 }
