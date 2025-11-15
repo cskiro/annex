@@ -173,20 +173,6 @@ When team members trust your repository, plugins install automatically.
 
 ---
 
-## Version History
-
-**v1.0.0** (Current) - First stable release
-- Reorganized structure (root-level skills/, hooks/, commands/, agents/)
-- Added hook support (`extract-explanatory-insights`)
-- Semantic skill categorization (analysis, claude-code, meta, testing, devops)
-- macOS/Linux compatibility fixes
-- 14 skills + 1 hook
-
-**v0.2.0** - Added playwright-e2e, tdd-automation, otel-monitoring, github-repo-setup, react-scaffolder
-**v0.1.0** - Initial release with 9 skills
-
----
-
 ## License
 
 Apache 2.0
