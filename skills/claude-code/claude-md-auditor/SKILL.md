@@ -1,6 +1,8 @@
 ---
 name: claude-md-auditor
+version: 0.1.0
 description: Comprehensive CLAUDE.md audit tool that validates memory files against official Anthropic documentation (docs.claude.com), community best practices, and academic research on LLM context optimization. Detects security violations, anti-patterns, and compliance issues. Generates detailed audit reports or refactored CLAUDE.md files that enforce standards across all conversations. Use this skill when reviewing CLAUDE.md configurations, onboarding projects, or ensuring LLMs strictly adhere to documented standards.
+author: Connor
 ---
 
 # CLAUDE.md Auditor

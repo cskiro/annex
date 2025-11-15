@@ -1,6 +1,8 @@
 ---
 name: codebase-auditor
+version: 0.1.0
 description: Comprehensive codebase audit tool that analyzes software engineering practices, detects code quality issues, security vulnerabilities, technical debt, and generates prioritized remediation plans based on modern SDLC best practices (2024-25 standards). Use this skill when conducting code reviews, assessing project health, preparing for production deployments, or evaluating legacy codebases.
+author: Connor
 ---
 
 # Codebase Auditor

@@ -1,6 +1,8 @@
 ---
 name: cc-insights
+version: 0.1.0
 description: Automatically processes Claude Code conversations from the project's history, enables RAG-powered semantic search, generates insight reports with pattern detection, and provides an optional dashboard for visualization. Transforms conversation data into actionable knowledge without manual intervention.
+author: Connor
 ---
 
 # Claude Code Insights Skill

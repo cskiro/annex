@@ -1,6 +1,8 @@
 ---
 name: bulletproof-react-auditor
+version: 0.1.0
 description: Comprehensive audit tool that analyzes React/TypeScript codebases against Bulletproof React architecture principles, detects structural anti-patterns, component design issues, and generates prioritized migration plans for adopting production-ready React patterns. Use this skill when auditing React applications, planning architecture refactors, evaluating project structure, or migrating to Bulletproof React patterns.
+author: Connor
 ---
 
 # Bulletproof React Auditor
