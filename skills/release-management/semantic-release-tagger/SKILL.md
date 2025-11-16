@@ -1,6 +1,8 @@
 ---
 name: semantic-release-tagger
+version: 0.1.0
 description: Automated git tagging agent that analyzes your repository, parses conventional commits, recommends semantic versions, and executes tag creation with your confirmation
+author: Connor
 ---
 
 # Semantic Release Tagger
