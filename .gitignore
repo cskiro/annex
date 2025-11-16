@@ -6,6 +6,7 @@ Desktop.ini
 # Claude Code local settings and skills
 .claude/settings.local.json
 .claude/skills/
+CLAUDE.md
 
 # Internal documentation and planning (root level only)
 /docs/

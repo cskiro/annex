@@ -11,9 +11,11 @@
 /plugin marketplace add cskiro/claudex
 
 # Install plugin bundles
+/plugin install api-tools@claudex
 /plugin install analysis-tools@claudex
 /plugin install claude-code-tools@claudex
 /plugin install meta-tools@claudex
+/plugin install release-management@claudex
 /plugin install testing-tools@claudex
 /plugin install devops-tools@claudex
 
@@ -55,6 +57,16 @@ claudex/
 
 ## Available Plugins
 
+### API Tools
+
+**`api-tools`** - Leverage Anthropic API features like structured outputs
+
+| Skill | Description |
+|-------|-------------|
+| **structured-outputs-advisor** | Expert advisor for choosing between JSON outputs and strict tool use modes |
+| **json-outputs-implementer** | Implement JSON outputs mode with guaranteed schema compliance |
+| **strict-tool-implementer** | Implement strict tool use mode with guaranteed parameter validation |
+
 ### Analysis Tools
 
 **`analysis-tools`** - Code quality, security, and architecture analysis
@@ -84,6 +96,14 @@ claudex/
 |-------|-------------|
 | **skill-creator** | Generate skills following Claudex marketplace standards |
 | **skill-isolation-tester** | Test skills in isolated environments (worktree, Docker, VMs) |
+
+### Release Management
+
+**`release-management`** - Automated release workflows and versioning
+
+| Skill | Description |
+|-------|-------------|
+| **semantic-release-tagger** | Automated git tagging agent with conventional commit parsing and GitHub release integration |
 
 ### Testing Tools
 
@@ -135,7 +155,7 @@ claudex/
 
 ## Features
 
-- **14 Skills** across 5 categories (analysis, claude-code, meta, testing, devops)
+- **18 Skills** across 7 categories (api, analysis, claude-code, meta, release-management, testing, devops)
 - **1 Hook** for automated insight extraction
 - **Semantic categorization** - Skills organized by purpose, not theme
 - **Multi-feature support** - Skills, hooks, commands (future), agents (future)
